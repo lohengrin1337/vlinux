@@ -1,0 +1,8 @@
+docker run -it ubuntu:22.04
+unminimize
+apt update
+apt install -y bsdmainutils
+apt install -y cowsay
+apt install -y man
+
+docker cp info.bash 4a401288fb9d:/tmp/info.bash

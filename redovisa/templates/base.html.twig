@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ pageTitle }} | {{ siteTitle }}</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <header>
+        <span class="site-title">{{ siteTitle }}</span>
+        <nav>
+            <ul>
+                <li><a href="/index.php">Om</a></li>
+                <li><a href="/report.php">Redovisning</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        {% block main %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Olof Jönsson - oljn22</p>
+    </footer>
+</body>
+</html>
