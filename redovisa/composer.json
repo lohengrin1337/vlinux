@@ -2,5 +2,9 @@
     "require": {
         "twig/twig": "^3.0",
         "erusev/parsedown": "^1.7"
+    },
+
+    "scripts": {
+        "server": "php -S localhost:8888"
     }
 }

@@ -18,7 +18,10 @@ body {
     display: flex;
     flex-direction: column;
 
-    /* background-color: var(--bg-color-body; */
+    color: var(--col-font);
+    background-color: var(--col-bg);
+    font-family: var(--font-main);
+    font-weight: 400;
 }
 
 header {
@@ -32,13 +35,16 @@ header {
     flex-wrap: wrap;
 
     padding: var(--baseline-half) var(--baseline-x2);
-    /* border-bottom: 3px solid var(--border-header); */
+    border-bottom: 3px solid var(--col-accent);
     /* background-color: var(--bg-color-header); */
     /* color: var(--color-header);     */
 }
 
 .site-title {
     margin-right: var(--baseline);
+    color: var(--col-accent);
+    font-size: var(--font-size-1-d);
+    font-weight: 700;
 }
 
 nav {
@@ -56,6 +62,9 @@ nav {
     }
 
     a {
+        font-size: var(--font-size-3-d);
+        font-weight: 600;
+        text-transform: lowercase;
         text-decoration: none;
         display: block;
         padding: 0 var(--baseline);
@@ -88,11 +97,41 @@ footer {
     justify-content: center;
     align-items: center;
 
-    padding: var(--baseline) var(--baseline-x2);
-    /* border-top: 3px solid var(--border-footer; */
+    color: var(--col-accent);
+    font-size: var(--font-size-4-d);
+    text-transform: lowercase;
+    padding: var(--baseline-half) var(--baseline-x2);
+    border-top: 3px solid var(--col-accent);
     /* background-color: var(--bg-color-footer; */
 
     /* color: var(--color-footer; */
 }
 
+h1,
+h2,
+h3,
+h4 {
+    font-weight: 500;
+    text-transform: lowercase;
+}
+
+h1 {
+    font-size: var(--font-size-1-d);
+}
+
+h2 {
+    font-size: var(--font-size-2-d);
+}
+
+h3 {
+    font-size: var(--font-size-3-d);
+}
+
+h4 {
+    font-size: var(--font-size-4-d);
+}
+
+a {
+    color: var(--col-accent);
+}
 

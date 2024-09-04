@@ -3,4 +3,26 @@
     --baseline-x2: 2.8rem;
     --baseline-x4: 5.6rem;
     --baseline-half: .7rem;
+
+    /* scale for desktop 1.3 - scale for mobile 1.2 */
+    --font-size-1-d: calc(1rem * 1.3 * 1.3 * 1.3 * 1.3);
+    --font-size-2-d: calc(1rem * 1.3 * 1.3 * 1.3);
+    --font-size-3-d: calc(1rem * 1.3 * 1.3);
+    --font-size-4-d: calc(1rem * 1.3);
+    --font-size-1-m: calc(1rem * 1.2 * 1.2 * 1.2 * 1.2);
+    --font-size-2-m: calc(1rem * 1.2 * 1.2 * 1.2);
+    --font-size-3-m: calc(1rem * 1.2 * 1.2);
+    --font-size-4-m: calc(1rem * 1.2);
+
+    --font-main: "Josefin Slab", monospace;
+
+    --white: #fff;
+    --black: #000;
+    --almost-white: #fafaff;
+    --almost-black: #101012;
+    --yellow: #C7942E;
+
+    --col-font: var(--almost-white);
+    --col-bg: var(--almost-black);
+    --col-accent: var(--yellow);
 }
