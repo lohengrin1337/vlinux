@@ -2,5 +2,20 @@
 
 {% block main %}
     <h1>{{ pageTitle }}</h1>
-    {{ content|raw }}
+
+    <nav class="small-nav">
+        <ul>
+            <li><a href="#kmom01">kmom01</a></li>
+            <li><a href="#kmom02">kmom02</a></li>
+            <li><a href="#kmom03">kmom03</a></li>
+            <li><a href="#kmom04">kmom04</a></li>
+            <li><a href="#kmom05">kmom05</a></li>
+            <li><a href="#kmom06">kmom06</a></li>
+            <li><a href="#kmom10">kmom10</a></li>
+        </ul>
+    </nav>
+    
+    <article>
+        {{ content|raw }}
+    </article>
 {% endblock %}
