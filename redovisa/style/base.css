@@ -42,31 +42,29 @@ header {
     font-weight: 700;
 }
 
-nav {
-    ul {
-        display: flex;
-        flex-wrap: wrap;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
+nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
 
-    li {
-        padding: 0;
-        margin: 0;
-        padding-right: var(--baseline);
-    }
+nav li {
+    padding: 0;
+    margin: 0;
+    padding-right: var(--baseline);
+}
 
-    a {
-        font-size: var(--font-size-3-d);
-        font-weight: 600;
-        text-transform: lowercase;
-        text-decoration: none;
-    }
+nav a {
+    font-size: var(--font-size-3-d);
+    font-weight: 600;
+    text-transform: lowercase;
+    text-decoration: none;
+}
 
-    li:last-of-type a {
-        padding-right: 0;
-    }
+nav li:last-of-type a {
+    padding-right: 0;
 }
 
 main {
@@ -93,19 +91,19 @@ footer {
 
 .small-nav {
     margin-bottom: var(--baseline-x2);
+}
 
-    li {
-        margin-bottom: var(--baseline-half);
-        padding-right: var(--baseline-half);
-    }
+.small-nav li {
+    margin-bottom: var(--baseline-half);
+    padding-right: var(--baseline-half);
+}
 
-    a {
-        font-size: var(--font-size-4-d);
-    }
+.small-nav a {
+    font-size: var(--font-size-4-d);
+}
 
-    li:last-of-type {
-        margin-bottom: 0;
-    }
+.small-nav li:last-of-type {
+    margin-bottom: 0;
 }
 
 h1,
@@ -149,9 +147,9 @@ h2 + h3 {
 }
 
 a {
-   color: var(--col-accent);
-   text-decoration: none;
-   font-weight: 500;
+    color: var(--col-accent);
+    text-decoration: none;
+    font-weight: 500;
 }
 
 figure,
