@@ -8,6 +8,8 @@ Installationen av Docker flöt på fint.
 
 Jag blev lite osäker på om jag behövde ändra något i imagen `ubuntu:22.04` för att rättaren ska kunna köra min `info.bash`, men jag tolkar det som att rättaren också kommer köra `unminimize`, `apt install cowsay` etc.
 
+För me-sidan valde jag att göra en egen liten lösning med `Twig` och `Markdown`, som jag tycker är smidiga att använda. Med hjälp av funktionen `renderPage` i  `render_service.php` kan twig-templates och markdown-content parsas. Jag har även lagt på lite style.
+
 Veckans TIL blir konceptet som Docker innebär, med möjligheten att definiera en komplett miljö som kan köras på vilket system som helst.
 
 

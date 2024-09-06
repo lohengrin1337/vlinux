@@ -3,10 +3,10 @@
 require 'render_service.php';
 
 renderPage(
-        "report",
-        "report",
-        [
-            "siteTitle" => "vlinux",
-            "pageTitle" => "Redovisning"
-        ]
-    );
+    "report",
+    "report",
+    [
+        "siteTitle" => "vlinux",
+        "pageTitle" => "Redovisning"
+    ]
+);

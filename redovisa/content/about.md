@@ -1,5 +1,5 @@
 <figure class="img profile-img">
-    <img src="/img/profile.jpg" width="200" height="200" alt="En bild på Olof"/>
+    <img src="img/profile.jpg" width="200" height="200" alt="En bild på Olof"/>
 </figure>
 
 Välkommen till min sida för kursen [vlinux](https://dbwebb.se/kurser/vlinux-v1) vid Blekinge Tekniska Högskola!
