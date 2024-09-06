@@ -15,23 +15,22 @@ body {
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
-
     color: var(--col-font);
     background-color: var(--col-bg);
     font-family: var(--font-main);
     font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
 }
 
 header {
     width: 100%;
     min-height: var(--baseline-x4);
     flex: 0 0 auto;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-
     padding: var(--baseline-half) var(--baseline-x2);
     border-bottom: 3px solid var(--col-accent);
 }
@@ -74,7 +73,6 @@ main {
     width: 100%;
     flex: 1 0 auto;
     padding: var(--baseline-x2);
-
     max-width: 750px;
     margin: 0 auto;
 }
@@ -83,11 +81,9 @@ footer {
     width: 100%;
     min-height: var(--baseline-x4);
     flex: 0 0 auto;
-
     display: flex;
     justify-content: center;
     align-items: center;
-
     color: var(--col-accent);
     font-size: var(--font-size-4-d);
     text-transform: lowercase;

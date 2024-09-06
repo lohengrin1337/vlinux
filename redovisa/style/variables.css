@@ -13,16 +13,17 @@
     --font-size-2-m: calc(1rem * 1.2 * 1.2 * 1.2);
     --font-size-3-m: calc(1rem * 1.2 * 1.2);
     --font-size-4-m: calc(1rem * 1.2);
-
     --font-main: "Josefin Slab", monospace;
-
     --white: #fff;
     --black: #000;
     --almost-white: #fafaff;
     --almost-black: #101012;
+    --grey-dark: #525652;
     --yellow: #C7942E;
-
+    --almost-transparent: rgba(255, 255, 255, 0.05);
     --col-font: var(--almost-white);
     --col-bg: var(--almost-black);
     --col-accent: var(--yellow);
+    --col-border: var(--grey-dark);
+    --col-bg-code: var(--almost-transparent);
 }
