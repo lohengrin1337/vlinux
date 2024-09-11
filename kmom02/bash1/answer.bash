@@ -279,7 +279,7 @@ assertEqual "3.2" false
 
 
 
-ANSWER="Replace this text with the variable holding the answer."
+ANSWER=$( find apache2 -maxdepth 1 -type d -name "*conf*" )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "3.3" false
@@ -308,7 +308,7 @@ assertEqual "3.3" false
 
 
 
-ANSWER="Replace this text with the variable holding the answer."
+ANSWER=$( ls -1Sr apache2/conf-available )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "4.1" false
@@ -333,7 +333,11 @@ assertEqual "4.1" false
 
 
 
-ANSWER="Replace this text with the variable holding the answer."
+ANSWER=$(
+    cp backup/php/* backup && \
+    rm -r backup/php && \
+    ls -1p backup
+)
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "4.2" false
@@ -355,7 +359,7 @@ assertEqual "4.2" false
 
 
 
-ANSWER="Replace this text with the variable holding the answer."
+ANSWER=$( find apache2/sites-available apache2/mods-available -type f -name "*ssl*.conf" )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "4.3" false
