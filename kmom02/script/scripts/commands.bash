@@ -31,7 +31,7 @@ function usage
 "  uptime                       Print uptime (runtime of system)."
 "  greet                        Greet user."
 "  loop <min> <max>             Print integers of interval."
-"  lower <n n n...>             Print any nums lower than 42."
+"  lower <n n n...>             Print any positive integers below 42."
 "  reverse <random sentence>    Print reverse (quote the string)."
 "  all                          Print all commands with default args."
 ""
@@ -109,10 +109,11 @@ function app-greet
     echo "This is output from greet"
 
     # current hour 0-23
-    current_hour="$(date +%k)"
+    declare -i current_hour="$(date +%k)"
 
     # test
-    # current_hour="$(date -d '00:59' +%k)"
+    # current_hour="$(date -d '05:59' +%k)"
+    # declare -p current_hour
 
     # morning 6-12am
     greeting="Good morning"
@@ -141,9 +142,16 @@ function app-loop
     declare -i min=$1
     declare -i max=$2
 
-    for i in {$min..$max}; do
-        echo "$i"
+    # declare -p min
+    # declare -p max
+
+    for num in $(seq "$min" "$max"); do
+        echo "$num"
     done
+
+    # for (( i=$min; i<=$max; i++ )); do
+    #     echo $i
+    # done
 }
 
 
@@ -154,6 +162,15 @@ function app-loop
 function app-lower
 {
     echo -e "This is output from lower.\nArgs: $*"
+
+    declare -a integers_below_42  # below 42
+    regex="^-?[0-9]+$"        # only (+/-) integers, at least one digit
+
+    for val in "$@"; do
+        [[ $val =~ $regex && $val -lt 42 ]] && integers_below_42+=("$val")
+    done
+
+    echo "Numbers below 42 are: ${integers_below_42[@]}"
 }
 
 
