@@ -33,7 +33,7 @@ function usage
 "  loop <min> <max>             Print integers of interval."
 "  lower <n n n...>             Print any positive integers below 42."
 "  reverse <random sentence>    Print reverse (quote the string)."
-"  all                          Print all commands with default args."
+"  all                          Run all commands with default args."
 ""
 "Options:"
 "  --help, -h     Print help."
@@ -82,8 +82,6 @@ function version
 #
 function app-cal
 {
-    echo "This is output from cal."
-
     cal
 }
 
@@ -94,8 +92,6 @@ function app-cal
 #
 function app-uptime
 {
-    echo "This is output from uptime"
-
     uptime -p
 }
 
@@ -106,10 +102,9 @@ function app-uptime
 #
 function app-greet
 {
-    echo "This is output from greet"
-
-    # current hour 0-23
-    declare -i current_hour="$(date +%k)"
+    # current hour 0-23 (integer)
+    declare -i current_hour
+    current_hour="$(date +%k)"
 
     # test
     # current_hour="$(date -d '05:59' +%k)"
@@ -137,10 +132,8 @@ function app-greet
 #
 function app-loop
 {
-    echo -e "This is output from loop.\nArg1: $1 \nArg2: $2 \nNr of args: $#"
-
-    declare -i min=$1
-    declare -i max=$2
+    declare -i min="$1"
+    declare -i max="$2"
 
     # declare -p min
     # declare -p max
@@ -161,16 +154,14 @@ function app-loop
 #
 function app-lower
 {
-    echo -e "This is output from lower.\nArgs: $*"
-
-    declare -a integers_below_42  # below 42
-    regex="^-?[0-9]+$"        # only (+/-) integers, at least one digit
+    declare -a integers_below_42    # below 42
+    regex="^-?[0-9]+$"              # only (+/-) integers, at least one digit
 
     for val in "$@"; do
         [[ $val =~ $regex && $val -lt 42 ]] && integers_below_42+=("$val")
     done
 
-    echo "Numbers below 42 are: ${integers_below_42[@]}"
+    echo "Numbers below 42 are: ${integers_below_42[*]}"
 }
 
 
@@ -180,7 +171,10 @@ function app-lower
 #
 function app-reverse
 {
-    echo -e "This is output from reverse.\nArg1: $1\nAll Args: $*"
+    scentence="$*"
+    rev_scentence=$(echo "$scentence" | rev)
+
+    echo "$rev_scentence"
 }
 
 
@@ -190,7 +184,43 @@ function app-reverse
 #
 function app-all
 {
-    echo "This is output from all."
+    echo -e "<<< RUNNING ALL COMMANDS >>>"
+
+    local info=(
+        "Print calendar:"
+        "Print uptime:"
+        "Print greeting:"
+        "Print loop (1-10):"
+        "Print integers below 42 (4 41 42 -44):"
+        "Print 'Random scentence' reverse:"
+    )
+
+    local funcs=(
+        cal
+        uptime
+        greet
+        loop
+        lower
+        reverse
+    )
+
+    local args=(
+        ""
+        ""
+        ""
+        "1 10"
+        "4 41 42 -44"
+        "random scentence"
+    )
+
+
+    # loop through funcs
+    for i in "${!funcs[@]}"; do
+        echo -e "\n${info[$i]^^}"           # newline + info in uppercase
+
+        # shellcheck disable=SC2086
+        app-"${funcs[$i]}" ${args[$i]}      # function plus arg(s)
+    done
 }
 
 
