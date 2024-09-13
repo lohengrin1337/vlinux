@@ -32,7 +32,7 @@ function usage
 "  greet                        Greet user."
 "  loop <min> <max>             Print integers of interval."
 "  lower <n n n...>             Print any positive integers below 42."
-"  reverse <random sentence>    Print reverse (quote the string)."
+"  reverse <random sentence>    Print argument in reverse."
 "  all                          Run all commands with default args."
 ""
 "Options:"
@@ -122,7 +122,9 @@ function app-greet
     # night 0-6am
     [[ $current_hour -ge 0 && $current_hour -le 5 ]] && greeting="Good night"
 
-    echo "$greeting $USER!"
+    [[ -n "$USER" ]] && user="$USER" || user="Anonymous"
+
+    echo "$greeting $user!"
 }
 
 
@@ -191,8 +193,8 @@ function app-all
         "Print uptime:"
         "Print greeting:"
         "Print loop (1-10):"
-        "Print integers below 42 (4 41 42 -44):"
-        "Print 'Random scentence' reverse:"
+        "Print integers below 42 (100 4 41 42 -44):"
+        "Print 'was I tac a ro rac a ti saw' reverse:"
     )
 
     local funcs=(
@@ -209,8 +211,8 @@ function app-all
         ""
         ""
         "1 10"
-        "4 41 42 -44"
-        "random scentence"
+        "100 4 41 42 -44"
+        "was I tac a ro rac a ti saw"
     )
 
 

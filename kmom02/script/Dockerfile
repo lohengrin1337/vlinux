@@ -1,15 +1,14 @@
 FROM ubuntu:24.04
 
 RUN apt update && \
-    apt -y install nano \
-    cowsay \
-    fortune \
-    bsdmainutils
+    apt install -y bsdmainutils
 
-WORKDIR /scripts
+WORKDIR /kmom02
 
-COPY scripts/ .
+COPY ./commands.bash .
 
 RUN chmod +x ./*.bash
 
-ENTRYPOINT [ "bash", "/scripts/script.bash" ]
+ENTRYPOINT [ "bash", "/kmom02/commands.bash" ]
+
+CMD ["all"]

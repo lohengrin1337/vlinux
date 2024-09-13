@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# shellcheck disable=all
+
 #
 # An example script comparison operators on integers
 
