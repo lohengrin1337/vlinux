@@ -15,6 +15,17 @@ Veckans TIL blir konceptet som Docker innebär, med möjligheten att definiera e
 
 <h2 id="kmom02">kmom02</h2>
 
+Under de tidigare kursernas gång har jag stött på några olika bash-script, och jag har även skrivit något enkelt eget skript för att automatisera kopiering av filer eller liknande.
+
+Syntaxen i bash är ganska enkel och bekväm, och påminner bitvis om python i att det inte behövs så många specialtecken, och att radbrytingar fungerar som avskiljare många gånger.
+Hanteringen av arrayer och strängar tog lite tid att greppa; särskilt konceptet *word splitting*, som jag inte känner igen från något annat språk. Den centrala datatypen verkar vara *string*, och andra typer som *integer* eller *array* verkar i princip vara strängar som hanteras på ett eget sätt. Antalet inbyggda funktioner verkar vara ganska begränsat.
+
+Det känns som att bash-script-programmering kommer va ett bra verktyg för enklare uppgifter, som hantering av filer och automatisering av manuella kommandon. Utmaningen kanske ligger i att begränsa användingsområdet till vad det är bäst för. 
+
+Uppgifterna flöt på bra, men jag ägnade extra tid för att få grepp om specifika saker, till exempel *word splitting*.
+
+Jag gillar helt klart koncepten i GNU/Linux. Det känns kraftfullt och spännande.
+
 <h2 id="kmom03">kmom03</h2>
 
 <h2 id="kmom04">kmom04</h2>
