@@ -1,0 +1,7 @@
+127.0.0.1 - - [16/Sep/2024:09:53:07 +0000] "GET / HTTP/1.0" 200 265 "-" "w3m/0.5.3+git20230121"
+127.0.0.1 - - [16/Sep/2024:11:30:15 +0000] "GET / HTTP/1.0" 200 265 "-" "w3m/0.5.3+git20230121"
+172.17.0.1 - - [16/Sep/2024:11:33:47 +0000] "GET / HTTP/1.1" 200 302 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0"
+172.17.0.1 - - [16/Sep/2024:11:33:47 +0000] "GET /favicon.ico HTTP/1.1" 404 493 "http://me.vlinux.se:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0"
+172.17.0.1 - - [16/Sep/2024:11:34:16 +0000] "GET / HTTP/1.1" 200 302 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0"
+172.17.0.1 - - [16/Sep/2024:11:35:41 +0000] "GET / HTTP/1.1" 200 302 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+172.17.0.1 - - [16/Sep/2024:11:35:41 +0000] "GET /favicon.ico HTTP/1.1" 404 492 "http://me.vlinux.se:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
