@@ -75,7 +75,7 @@ assertEqual "1.1" false
 
 
 
-ANSWER="$(wc -l $FILE)"
+ANSWER="$( wc -l $FILE )"
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "1.2" false
@@ -97,7 +97,7 @@ assertEqual "1.2" false
 
 
 
-ANSWER=$(wc -w $FILE | cut -f 1 -d ' ')
+ANSWER=$( wc -w $FILE | cut -f 1 -d ' ' )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "1.3" false
@@ -117,7 +117,7 @@ assertEqual "1.3" false
 
 
 
-ANSWER=$(grep -E "pansar.*notepad|notepad.*pansar" $FILE)
+ANSWER=$( grep -E "pansar.*notepad|notepad.*pansar" $FILE )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "1.4" false
@@ -135,7 +135,7 @@ assertEqual "1.4" false
 
 
 
-ANSWER=$(tail -n 4 $FILE)
+ANSWER=$( tail -n 4 $FILE )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "1.5" false
@@ -155,7 +155,7 @@ assertEqual "1.5" false
 
 
 
-ANSWER=$(grep -m 1 "Log opened" $FILE)
+ANSWER=$( grep -m 1 "Log opened" $FILE )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "1.6" false
@@ -173,7 +173,7 @@ assertEqual "1.6" false
 
 
 
-ANSWER=$(grep -m 3 -w "wasa" $FILE | tail -n 1)
+ANSWER=$( grep -m 3 -w "wasa" $FILE | tail -n 1 )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "1.7" false
@@ -191,7 +191,7 @@ assertEqual "1.7" false
 
 
 
-ANSWER=$(grep -E "^11:15" $FILE | wc -l)
+ANSWER=$( grep -c -E "^11:15" $FILE )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "1.8" false
@@ -209,7 +209,7 @@ assertEqual "1.8" false
 
 
 
-ANSWER=$(grep -m 1 -E "^07:48.*<.?pansar>" $FILE)
+ANSWER=$( grep -m 1 -E "^07:48.*<.?pansar>" $FILE )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "1.9" false
@@ -227,7 +227,7 @@ assertEqual "1.9" false
 
 
 
-ANSWER=$(grep -A 10 "Wed Jun 17 2015" $FILE | tail -n 10)
+ANSWER=$( grep -A 10 "Wed Jun 17 2015" $FILE | tail -n 10 )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "1.10" false
@@ -252,7 +252,7 @@ assertEqual "1.10" false
 
 
 
-ANSWER=$(grep -E "Forumet.*(projektet.*htmlphp|htmlphp.*projektet)" $FILE)
+ANSWER=$( grep -E "Forumet.*(projektet.*htmlphp|htmlphp.*projektet)" $FILE )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "2.1" false
@@ -270,16 +270,16 @@ assertEqual "2.1" false
 
 
 
-ANSWER=$(grep -B 2 -E "Bobbzorzen.*cewl" $FILE|head -n 1|cut -f 3-7 -d ' ' )
+ANSWER=$( grep -E "<@Bobbzorzen>" $FILE | grep -B 2 "cewl" | head -n 1 )
 
 # I will now test your answer - change false to true to get a hint.
-assertEqual "2.2" true
+assertEqual "2.2" false
 
 #"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Exercise 2.3 (3 points) 
 # 
 # How many words are there in the fourth to ninth row, under the day 'Mon Jun
-# 08 2015'?
+#   '?
 #
 # Write your code below and put the answer into the variable ANSWER.
 #
@@ -289,7 +289,7 @@ assertEqual "2.2" true
 
 
 
-ANSWER="Replace this text with the variable holding the answer."
+ANSWER=$( grep -A 9 "Mon Jun 08 2015" $FILE | tail -n 6 | wc -w )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "2.3" false
