@@ -26,7 +26,19 @@ Uppgifterna flöt på bra, men jag ägnade extra tid för att få grepp om speci
 
 Jag gillar helt klart koncepten i GNU/Linux. Det känns kraftfullt och spännande.
 
+
 <h2 id="kmom03">kmom03</h2>
+
+Jag har inte skapat något som liknar *Apache name-based virtual hosts* på egen hand tidigare. Det var inte svårt, men det krävdes noggrannhet för att få allt på plats. Den här typen av kunskap är svårt att räkna ut på egen hand, men när man lärt sig är det ganska enkelt.
+
+Det är kul med terminal-kommandon som `grep`, `cut`, `head` med flera, där man får jobba med logiskt tänkande för att lösa specifika uppgifter. Jag lade lite extra tid på att lära mig mer om *regular expressions*, vilket jag hade nytta av i labben.
+
+Portar fungerar som virtuella dörrar hos en maskin. Förutom att genom en ip-adress nå rätt maskin, kan man även tala om vilket port som ska användas, för att information ska komma till rätt destination, där den behandlas av rätt mjukvara. Det finns drygt 65000 portar hos en maskin, och vissa av dem är reserverade för specifika ändamål. För utveckling kan exempelvis 8080 vara en lämplig port för inkommande trafik till servern, medan 80 (HTTP) eller 443 (HTTPS) är standard för produktion.
+
+Jag känner att jag har fått grepp om hur volymer fungerar i Docker nu. Det är betydligt smidigare än att kopiera in filer manuellt, och det minskar risken för att förlora data.
+
+Jag gillar *GNU/Linux*. Ju mer bekväm man blir i att hoppa runt i terminalen, desto mer får man nytta av alla kraftfulla funktioner.
+
 
 <h2 id="kmom04">kmom04</h2>
 

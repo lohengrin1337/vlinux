@@ -5,7 +5,7 @@
 # author: Olof Jönsson
 #
 
-USAGE="Usage: $0 'path-to-site-folder' [incoming port ('8080' by default)]"
+USAGE="Usage: $0 <path-to-site-folder> [incoming port (8080 by default)]"
 
 # Check if Docker is running
 if ! command -v docker &> /dev/null; then
@@ -16,12 +16,12 @@ fi
 # Check first argument
 if [[ -z $1 ]]; then
     echo "Run script with path to your site-folder as argument!"
-    echo $USAGE
+    echo "$USAGE"
     exit 1
 fi
 
 # Print usage
-[[ $1 = "-h" || $1 = "--help" ]] && echo $USAGE && exit 0
+[[ $1 = "-h" || $1 = "--help" ]] && echo "$USAGE" && exit 0
 
 CURRENT_DIR="$(pwd)"
 SITE_FOLDER="$1"
@@ -34,21 +34,20 @@ DOCKER_IMAGE="lohengrin1337/vlinux-vhost:1.0"
 # Check site folder
 if [[ ! -d "$SITE_FOLDER" ]]; then
     echo "The site-folder '$SITE_FOLDER' does not exist!"
-    echo $USAGE
+    echo "$USAGE"
     exit 1
 fi
 
-# Run server
-docker run -d --rm \
+# Run server, and check status
+if ! docker run -d --rm \
     --name "$CONTAINER_NAME" \
     -p "$DOCKER_PORT_MAPPING" \
     -v "$CURRENT_DIR"/"$SITE_FOLDER":"$DOCUMENT_ROOT" \
     --add-host "$DOCKER_HOST_ENTRY" \
     "$DOCKER_IMAGE"
-
-# Check exit status of docker run
-if [[ $? -ne 0 ]]; then
-    echo "Failed to run Docker container"
+then
+    # Fail
+    echo "Failed to run Docker image!"
     exit 1
 fi
 
