@@ -1,0 +1,14 @@
+{
+  "name": "vlinux-express",
+  "version": "1.0.0",
+  "description": "vlinux-kmom04",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "lohengrin",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
