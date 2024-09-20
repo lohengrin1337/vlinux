@@ -6,7 +6,7 @@
 #
 
 SCRIPT=$( basename "$0" )
-USAGE="Usage: "$SCRIPT" <path-to-volume>"
+USAGE="Usage: $SCRIPT <path-to-volume> [--flask]"
 
 # Check if Docker is running
 if ! command -v docker &> /dev/null; then
@@ -24,14 +24,22 @@ fi
 # Print usage
 [[ $1 = "-h" || $1 = "--help" ]] && echo "$USAGE" && exit 0
 
+# set optional flask-image if $2 = --flask
+if [[ -n $2 && $2 = "--flask" ]]; then
+    DOCKER_IMAGE="lohengrin1337/vlinux-server-flask:1.0"
+    FLASK_PORT="5000"
+    FLASK="Flask"
+fi
+
 CURRENT_DIR="$(pwd)"
 SITE_FOLDER="$1"
 CONTAINER_NAME="myserver"
-OUTSIDE_PORT="${DBWEBB_PORT:-1337}"
-INSIDE_PORT="1337"
+OUTSIDE_PORT="${DBWEBB_PORT:-${FLASK_PORT:-1337}}" # dbwebb / flask / 1337 (express)
+INSIDE_PORT="${FLASK_PORT:-1337}"
 URL="http://localhost:$OUTSIDE_PORT"
 DOCUMENT_ROOT="/server/data"
-DOCKER_IMAGE="lohengrin1337/vlinux-server:1.0"
+DOCKER_IMAGE="${DOCKER_IMAGE:-lohengrin1337/vlinux-server:1.0}"
+SERVER_NAME="${FLASK:-express}"
 
 # Check site folder
 if [[ ! -d "$SITE_FOLDER" ]]; then
@@ -53,4 +61,4 @@ then
 fi
 
 # Success
-echo "Success: Your site is being served at '$URL' from container '$CONTAINER_NAME'"
+echo "Success: Your site is being served with $SERVER_NAME at '$URL' from container '$CONTAINER_NAME'"
