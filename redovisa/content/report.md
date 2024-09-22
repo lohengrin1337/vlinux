@@ -42,6 +42,17 @@ Jag gillar *GNU/Linux*. Ju mer bekväm man blir i att hoppa runt i terminalen, d
 
 <h2 id="kmom04">kmom04</h2>
 
+Jag valde att lösa både express- och Flask-server. Express-imagen ligger som default i `dockerhub.bash`, och Flask-imagen kan köras med `dockerhub.bash --flask`.
+Jag började med att göra en express-server, eftersom det låg närmast till hands för mig. Sen ville jag utmana mig med att skriva lite python-kod, vilket jag inte gjort på mer än ett år. Det gick snabbare att komma in i python-kodandet än jag trodde, vilket var skönt, och jag gillar hur avskalad syntaxen är.
+
+Arbetet med Docker flyter på bra, och det känns bekvämt med de olika kommandona vi använder. När jag byggde min Flask-image fick jag lite trubbel med `FROM debian:stretch-slim` (verkar inte vara tillgänglig), men jag fick det att fungera med `FROM debian:bullseye-slim` istället.
+
+Begreppen klient och server är inga konstigheter vid det här laget. En klient är en applikation som skickar en förfrågan (request) till en server. Servern är en applikation som lyssnar efter förfrågningar, behandlar dem, och skickar ett svar (response), som klienten tar emot och gör något med.
+
+I `client.bash` lade jag in while-loopen i en main-funktion, men i övrigt behöll jag ungefär samma struktur.
+Jag blev nöjd med save-funktionen, där jag kallar på scriptet rekursivt med resterande argument, och gör en redirect till fil.
+
+
 <h2 id="kmom05">kmom05</h2>
 
 <h2 id="kmom06">kmom06</h2>
