@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Script to test an express server
+# Script to test an express/flask server
 #
 # Exit values:
 #  0 on success
@@ -15,9 +15,14 @@ SCRIPT=$( basename "$0" )
 VERSION="1.0.0"
 
 
-# Port and url of express server
-PORT=${DBWEBB_PORT:-1337}
+# Port and url of express/flask dev server
+PORT=${DBWEBB_PORT:-8080}
 URL="http://localhost:$PORT"
+
+# Define color codes
+GREEN="\033[0;32m"
+RED="\033[0;31m"
+NO_COLOR="\033[0m"
 
 
 #
@@ -30,10 +35,10 @@ function usage
         "Usage: $SCRIPT [options] <command> [arguments]"
         ""
         "Commands:"
-        "   all              Request /all           - present all plants"
-        "   names            Request /names         - present all names"
-        "   color <color>    Request /color/<color> - present matching plants"
-        "   test <url>       Test server            - get current status"
+        "   all              Request /all               present all plants"
+        "   names            Request /names             present all names"
+        "   color <color>    Request /color/<color>     present matching plants"
+        "   test <url>       Test server                get current status"
         ""
         "Options:"
         "   --help, -h       Print help."
@@ -53,8 +58,8 @@ function badUsage
 {
     local message="$1"
     local txt=(
-"For an overview of the commands, execute:"
-"$SCRIPT --help, -h"
+        "For an overview of the commands, execute:"
+        "$SCRIPT --help, -h"
     )
 
     [[ -n $message ]] && printf "%s\\n" "$message"
@@ -70,7 +75,7 @@ function badUsage
 function version
 {
     local txt=(
-"$SCRIPT version $VERSION"
+        "$SCRIPT version $VERSION"
     )
 
     printf "%s\\n" "${txt[@]}"
@@ -84,7 +89,7 @@ function version
 function save
 {
     # run script recursive with args
-    ./"$SCRIPT" "$@" &> saved.data
+    ./"$0" "$@" &> "saved.data"
 }
 
 
@@ -124,27 +129,40 @@ function app-color
 #
 function app-test
 {
-    # get status code and msg
-    read -r status_code status_msg < <(curl -Is "$URL" | head -n 1 | cut -f 2,3 -d ' ')
+    # request url, and get header or error message
+    if header=$( curl -IsS "$URL" 2>&1 ); then
+        top_line=$( echo "$header" | head -n 1 | sed 's/\r//g' )    # top line of header without newline
+        status_code=$( echo "$top_line" | cut -f 2 -d ' ' )         # cut out status code
+        status_msg=$( echo "$top_line" | cut -f 3- -d ' ' )         # cut out status text
 
-    # remove newline \r
-    status_msg="${status_msg//$'\r'/}"
+        local msg="Server is responding with status $status_code ($status_msg), when requesting $URL"
 
-    # status="$( curl -Is "$URL" | head -n 1 | cut -f 2,3 -d ' ' )"
-    # status_code="$( echo "$status" | cut -f 1 -d ' ' )"
-    # status_msg="$( echo "$status" | cut -f 2 -d ' ' | tr -d '\r' )"
-    # echo status="$status"
-    # echo status_code="$status_code"
-    # echo status_msg="$status_msg"
-    # echo "$status_msg" | cat -v
+        # success
+        [[ $status_code  == "200" ]] && \
+            echo -e "${GREEN}$msg${NO_COLOR}" && \
+            exit 0
 
-    [[ $status_msg  == "OK" ]] && \
-    echo "Server is running with status $status_code" && \
-    exit 0
+        # failure
+        echo -e "${RED}$msg${NO_COLOR}" && \
+        exit 1
+    fi
 
-    echo "Server is not responding properly" && \
+    # error message from curl, when failing to request url
+    error=$header   # catched in header variable due to '2>&1'
+
+    error_msg=$( echo "$error" | cut -f 10- -d ' ')     # cut out last part
+
+    echo -e "${RED}Curl failed when requesting '$URL'!\nError: $error_msg${NO_COLOR}" && \
     exit 1
+
+
+    # # get status code and msg
+    # read -r status_code status_msg < <(curl -Is "$URL" | head -n 1 | cut -f 2,3 -d ' ')
+
+    # # remove newline \r
+    # status_msg="${status_msg//$'\r'/}"
 }
+
 
 
 #

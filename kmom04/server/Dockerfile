@@ -2,11 +2,9 @@ FROM node:18
 
 WORKDIR /server
 
-COPY package*.json ./
+COPY package*.json index.js ./
 
 RUN npm install
-
-COPY index.js .
 
 ENTRYPOINT ["npm"]
 
