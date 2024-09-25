@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>regex1 - vlinux</title>
+<style>
+html {
+    overflow-y: scroll;
+}
+
+body {
+    margin: 8px auto;
+    max-width: 700px;
+}
+
+h2 {
+    line-height: 2.5em;
+    border-bottom: 1px solid #aaa;
+}
+
+h3 {
+    line-height: 2.5em;
+    border-bottom: 1px solid #ccc;
+}
+
+p {
+    margin-bottom: 22px;
+}
+
+div.answer {
+  font-family: "Courier New", monospace;
+  white-space: pre;
+  margin-bottom: 1em;
+}
+
+.fail {
+    color: red;
+}
+
+.success {
+    color: green;
+}
+
+.nopass {
+    color: olive;
+}
+
+.pass {
+    color: green;
+}
+
+.passdistinct {
+    color: DarkGoldenRod;
+}
+table, th, td {
+    border: 1px solid #666;
+}
+
+code {
+    background-color: #eee;
+    border: 1px solid #999;
+    padding: 1px;
+    font-size: larger;
+}
+
+pre code {
+    display: block;
+    background-color: #eee;
+    border: none;
+    border-left: 2px solid #999;
+    padding: 0.5em;
+    margin-bottom: 22px;
+}
+</style>
+</head>
+<body>
+
+<pre>
+5a5e8a0ef9620ff45f83bfb220c23dbb
+vlinux
+regex1
+v1
+oljn22
+2024-09-24 06:19:42
+v4.0.0 (2019-03-05)
+</pre>
+
+<p><i>Generated 2024-09-24 08:19:42 by <a href="https://github.com/dbwebb-se/lab">dbwebb lab-utility</a> v4.0.0 (2019-03-05).</i></p>
+<hr>
+
+<h1>regex1 - vlinux</h1>
+<p>A lab where you use Unix tools available from the command line interface to manipulate a textfile. Have a look at https://regex101.com/. It is a good tool when trying out regular expressions. All
+names in the provided file are generated and has no real connection to anyone. The names and cities are randomly generated.</p>
+
+
+<h2>1. Regex 1</h2>
+<p>Work with the command <code>grep</code> to match text from files. This lab is constructed for GNU/grep.</p>
+
+<p>Use <code>man grep</code> as reference.</p>
+
+<p>The name of the file: names.csv</p>
+
+<p>To answer the questions, use the following structure:
+<code>ANSWER = "$(grep &lt;flag&gt; 'regex'  &lt;filename&gt;)"</code></p>
+
+<p>Tips: Use the flag <code>-E</code> (Extended).</p>
+
+
+<h3>Exercise 1.1 (1 points)</h3>
+<p>Use the <code>grep</code> command and match all rows containg the substring <code>anna</code> from the file <code>names.csv</code>.</p>
+
+<p>Answer with the result.</p>
+
+
+
+
+
+
+<h3>Exercise 1.2 (1 points)</h3>
+<p>Use the <code>grep</code> command and match all rows with firstnames starting with C-E immediately followed by some letter g-j.</p>
+
+<p>Answer with the result.</p>
+
+
+
+
+
+
+<h3>Exercise 1.3 (1 points)</h3>
+<p>Use the <code>grep</code> command and match all rows with phonenumbers starting with 555 immediately followed by a 4, 6 or 8.</p>
+
+<p>Answer with the result.</p>
+
+
+
+
+
+
+<h3>Exercise 1.4 (1 points)</h3>
+<p>Reuse the command from last question and match all that also are born 2009.</p>
+
+<p>Answer with the result.</p>
+
+
+
+
+
+
+<h3>Exercise 1.5 (1 points)</h3>
+<p>Use the <code>grep</code> command and match all rows where the person lives in a town ending with &#8220;lilla&#8221;.</p>
+
+<p>Answer with the result.</p>
+
+
+
+
+
+
+<h3>Exercise 1.6 (1 points)</h3>
+<p>Use the <code>grep</code> command and match all rows where there are five or six number 5&#8217;s in a row.</p>
+
+<p>Answer with the result.</p>
+
+
+
+
+
+
+<h3>Exercise 1.7 (1 points)</h3>
+<p>Use the <code>grep</code> command and match all rows that fulfil the criterias:</p>
+
+<ol>
+<li>Firstname starts with a capital F.</li>
+<li>Lastname starts with capital S or H.</li>
+<li>The domain name of their email addresses has one or two <code>l</code> in a row in them.</li>
+</ol>
+
+<p>Answer with the result.</p>
+
+
+
+
+
+
+<h3>Exercise 1.8 (1 points)</h3>
+<p>Use the <code>grep</code> command and match all rows that fulfil the criterias:</p>
+
+<ol>
+<li>Firstname does not start with a vowel (including swedish vowels).</li>
+<li>Are born in the range of 1994 to 1998, 2004 or 2005.</li>
+</ol>
+
+<p>Answer with the result.</p>
+
+
+
+
+
+
+<h3>Exercise 1.9 (1 points)</h3>
+<p>Use the <code>grep</code> command and match and print only the city containing four spaces.</p>
+
+<p>Answer with the result.</p>
+
+
+
+
+
+
+<h3>Exercise 1.10 (1 points)</h3>
+<p>Use the <code>grep</code> command and match all rows that fulfil the criterias. Print only the match.</p>
+
+<ol>
+<li>The domain name of the email address should start with an &#8220;r&#8221; and end with a vowel.</li>
+</ol>
+
+<p>Answer with the result.</p>
+
+
+
+
+
+
+
+<hr>
+<code>5a5e8a0ef9620ff45f83bfb220c23dbb</code>
+
+</body>
+</html>
