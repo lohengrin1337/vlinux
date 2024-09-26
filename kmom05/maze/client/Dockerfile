@@ -5,8 +5,6 @@ RUN apt update && \
 
 WORKDIR /client
 
-COPY client.bash .
+COPY mazerunner.bash .
 
 ENTRYPOINT [ "bash" ]
-
-# CMD [ "client.bash" ]
