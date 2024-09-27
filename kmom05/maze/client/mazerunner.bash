@@ -12,7 +12,7 @@
 
 
 ##
-## VARIABLES DEFINITIONS
+## VARIABLES
 ##
 
 # Name of the script
@@ -27,15 +27,13 @@ PORT="1337"
 BASE_URL="$HOST:$PORT"
 TO_CSV="?type=csv"
 
-# global vars used with 'get-maps' and get_game_id functions
-declare -a MAPS_AVAILABLE
-GAME_ID=""
-
 # Define color codes
 GREEN="\033[0;32m"
 RED="\033[0;31m"
 NO_COLOR="\033[0m"
 
+# source .game_config if exists (globals GAME_ID, ROOM_ID and MAPS_AVAILABLE)
+[[ -f ".game_config" ]] && source ".game_config"
 
 
 ##
@@ -124,40 +122,38 @@ function response_error
 }
 
 #
-# update global array MAPS_AVAILABLE with available maps
+# set global array MAPS_AVAILABLE with available maps
 #
 function get_maps
 {
-    # request '/map' (header and body, silent, include error from curl)
+    # request '/map' (header and body(csv), silent, include error from curl)
     url="$BASE_URL/map$TO_CSV"
     if ! res="$(curl -isS "$url")"; then
         curl_error "$url" "$res"
     fi
 
-    # get maps from body (get the json-files from csv content)
-    if ! maps="$(echo "$res" | tail -n 1 | grep -Eo "[[:alnum:]\-]+.json")"; then
+    # get maps from body (get the json-files from csv content in format 'map1.json map2.json')
+    if ! maps="$(echo "$res" | tail -n 1 | grep -Eo "[[:alnum:]\-]+.json" | tr '\n' ' ')"; then
         response_error "$res"
     fi
 
-    # append maps to MAPS_AVAILABLE
-    for map in $maps; do
-        map="${map%.json}"          # remove file extension
-        MAPS_AVAILABLE+=("$map")    # append map
-        (( i++ ))
-    done
+    # Add maps to .game_config as global array, and source the file
+    echo "MAPS_AVAILABLE=($maps)" >> ".game_config"
+    source ".game_config"
 }
 
 #
-# update global GAME_ID with id from file 'game_id'. exit with msg if nonexisting.
+# verify game exists, by doing nothing or exiting with message
 #
-function get_game_id
+function verify_game_exists
 {
-    if ! id="$(cat "game_id")"; then
+    local msg="$1"  # optional message argument
+
+    if [[ -z $GAME_ID ]]; then
+        [[ -n $msg ]] && echo "$msg" || \
         echo "STEP ONE: start a new game with './$SCRIPT init'"
         exit 1
     fi
-
-    GAME_ID="$id"
 }
 
 
@@ -171,7 +167,7 @@ function get_game_id
 #
 function app_init
 {
-    # request '/' (header and body, silent, include error from curl)
+    # request '/' (header and body(csv), silent, include error from curl)
     url="$BASE_URL/$TO_CSV"
     if ! res="$(curl -isS "$url")"; then
         curl_error "$url" "$res"
@@ -182,8 +178,8 @@ function app_init
         response_error "$res"
     fi
 
-    # save game id to file
-    echo "$game_id" > "./game_id"
+    # save game id to global GAME_ID in .game_config
+    echo "GAME_ID=$game_id" > ".game_config"    # replace any earlier content (fresh game)
     echo "A new game is created with id: $game_id"
     echo "NEXT STEP: show maps with './$SCRIPT maps'"
 }
@@ -194,8 +190,8 @@ function app_init
 #
 function app_maps
 {
-    # get available maps into MAPS_AVAILABLE
-    get_maps
+    # get available maps into MAPS_AVAILABLE, if not set
+    [[ -z $MAPS_AVAILABLE ]] && get_maps
 
     # check that at least one map is available
     [[ ${#MAPS_AVAILABLE[@]} -lt 1 ]] && \
@@ -203,9 +199,9 @@ function app_maps
 
     echo "Available maps:"
 
-    # print each map with a number (index +1)
+    # print each map with a number (index +1), and without file extension
     for i in "${!MAPS_AVAILABLE[@]}"; do
-        echo "$((i + 1)): ${MAPS_AVAILABLE[$i]}"
+        echo "$((i + 1)): ${MAPS_AVAILABLE[$i]%.json}"
     done
 
     echo "NEXT STEP: select a map with './$SCRIPT select <number>'"
@@ -216,8 +212,11 @@ function app_maps
 #
 function app_select
 {
-    # get available maps into MAPS_AVAILABLE, and count maps
-    get_maps
+    # check game is existing
+    verify_game_exists
+
+    # get available maps into MAPS_AVAILABLE, if not set, and count maps
+    [[ -z $MAPS_AVAILABLE ]] && get_maps
     map_count=${#MAPS_AVAILABLE[@]}
 
     # check at least one map is available
@@ -232,9 +231,19 @@ function app_select
     # select map (convert number to index)
     map="${MAPS_AVAILABLE[$((num - 1))]}"
 
-    echo -e "selected map:\n$map"
+    # request '/<game_id>/map/<map_name>' (header and body(csv), silent, include error from curl)
+    url="${BASE_URL}/${GAME_ID}/map/${map}${TO_CSV}"
+    if ! res="$(curl -isS "$url")"; then
+        curl_error "$url" "$res"
+    fi
 
-    # get game id from file to global GAME_ID
+    # get text content
+    if ! response_text="$(echo "$res" | tail -n 1 | grep -o "New map selected")"; then
+        response_error "$res"
+    fi
+
+    echo "$response_text: ${map%.json}"
+    echo "NEXT STEP: enter first room with './$SCRIPT enter'"
 }
 
 #
