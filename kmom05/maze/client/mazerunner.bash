@@ -21,6 +21,7 @@ VERSION="1.0.0"
 HOST="maze-server"
 PORT="1337"
 BASE_URL="$HOST:$PORT"
+TO_CSV="?type=csv"
 
 # Define color codes
 GREEN="\033[0;32m"
@@ -87,11 +88,53 @@ function version
 
 
 #
-# init game, and save id to 'data/game_id'
+# handle error from curl
+#
+function curl_error
+{
+    echo "Curl failed when requesting '$1'"
+    [[ -n $2 ]] && echo "$2"
+    exit 1
+}
+
+
+#
+# handle response error
+#
+function response_error
+{
+    # get status code from header, and full content-body
+    status_code="$(echo $res | head -n 1 | grep -Ewo "[0-9]{3}")"
+    content="$(echo $res | tail -n 1)"
+    content="${content//\"{}/}" # remove quotes and curly brackets
+
+    echo "Unable to create new game!"
+    echo "Response code: $status_code"
+    echo "Content: $content"
+    exit 1
+}
+
+
+#
+# init game, and save id to 'game_id'
 #
 function app-init
 {
-    true
+    # request '/' (header and body, silent, include error from curl)
+    url="$BASE_URL/$TO_CSV"
+    if ! res="$(curl -isS "$url")"; then
+        curl_error "$url" "$res"
+    fi
+
+    # get game id from body
+    if ! game_id="$(echo $res | tail -n 1 | grep -Ewo "[0-9]{5}")"; then
+        response_error "$res"
+    fi
+
+    # save game id to file
+    echo "$game_id" > "./game_id"
+    echo "A new game is created with id: $game_id"
+    echo "NEXT STEP: show maps with './$SCRIPT maps'"
 }
 
 #
@@ -99,7 +142,28 @@ function app-init
 #
 function app-maps
 {
-    true
+    # request '/map' (header and body, silent, include error from curl)
+    url="$BASE_URL/map$TO_CSV"
+    if ! res="$(curl -isS "$url")"; then
+        curl_error "$url" "$res"
+    fi
+
+    # get maps from body (get the json-files from csv content)
+    if ! maps="$(echo "$res" | tail -n 1 | grep -Eo "[[:alnum:]\-]+.json")"; then
+        response_error "$res"
+    fi
+
+    echo "Available maps:"
+
+    # print each map with a number
+    i=1
+    for map in $maps; do
+        map="${map%.json}"  # remove file extension
+        echo "$i: $map"
+        (( i++ ))
+    done
+
+    echo "NEXT STEP: select a map with './$SCRIPT select <number>'"
 }
 
 #
