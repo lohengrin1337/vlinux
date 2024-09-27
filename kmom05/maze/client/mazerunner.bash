@@ -16,12 +16,14 @@ SCRIPT=$( basename "$0" )
 # Current version
 VERSION="1.0.0"
 
-
 # host and port of maze-server
 HOST="maze-server"
 PORT="1337"
 BASE_URL="$HOST:$PORT"
 TO_CSV="?type=csv"
+
+# global var used with 'get-maps' function
+declare -a MAPS_AVAILABLE
 
 # Define color codes
 GREEN="\033[0;32m"
@@ -138,9 +140,9 @@ function app-init
 }
 
 #
-# show existing maps with numbers
+# update global array MAPS_AVAILABLE with available maps
 #
-function app-maps
+function get-maps
 {
     # request '/map' (header and body, silent, include error from curl)
     url="$BASE_URL/map$TO_CSV"
@@ -153,14 +155,27 @@ function app-maps
         response_error "$res"
     fi
 
+    # append maps to MAPS_AVAILABLE
+    for map in $maps; do
+        map="${map%.json}"          # remove file extension
+        MAPS_AVAILABLE+=("$map")   # append map
+        (( i++ ))
+    done
+}
+
+#
+# show existing maps with numbers
+#
+function app-maps
+{
+    # get available maps into MAPS_AVAILABLE
+    get-maps
+
     echo "Available maps:"
 
-    # print each map with a number
-    i=1
-    for map in $maps; do
-        map="${map%.json}"  # remove file extension
-        echo "$i: $map"
-        (( i++ ))
+    # print each map with a number (index +1)
+    for i in "${!MAPS_AVAILABLE[@]}"; do
+        echo "$(($i + 1)): ${MAPS_AVAILABLE[$i]}"
     done
 
     echo "NEXT STEP: select a map with './$SCRIPT select <number>'"
