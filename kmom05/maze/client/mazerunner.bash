@@ -147,13 +147,37 @@ function get_maps
 #
 function verify_game_exists
 {
-    local msg="$1"  # optional message argument
+    # set optional message ($1), else default message
+    local msg
+    [[ -n $1 ]] && \
+        msg="$1" || \
+        msg="STEP ONE: start a new game with './$SCRIPT init'"
 
+    # set optional exit code ($2), else default
+    local exit_code
+    [[ -n $2 ]] && \
+        exit_code="$2" || \
+        exit_code="1"
+
+    # check if GAME_ID is unset (sourced with .game_config)
     if [[ -z $GAME_ID ]]; then
-        [[ -n $msg ]] && echo "$msg" || \
-        echo "STEP ONE: start a new game with './$SCRIPT init'"
-        exit 1
+        echo "$msg"
+        exit "$exit_code"
     fi
+
+
+    # local default_msg="STEP ONE: start a new game with './$SCRIPT init'"
+    # local default_exit_code=1
+    # local msg="$1"          # optional message argument
+    # local exit_code="$2"    # optional code argument (default 1)
+
+    # if [[ -z $GAME_ID ]]; then
+    #     [[ -n $msg ]] && echo "$msg" || \
+    #         echo "STEP ONE: start a new game with './$SCRIPT init'"
+
+    #     [[ -z $exit_code ]] && exit $default_exit_code
+    #     exit $exit_code
+    # fi
 }
 
 
@@ -203,6 +227,9 @@ function app_maps
     for i in "${!MAPS_AVAILABLE[@]}"; do
         echo "$((i + 1)): ${MAPS_AVAILABLE[$i]%.json}"
     done
+
+    # inform user to init game if not done
+    verify_game_exists "" 0
 
     echo "NEXT STEP: select a map with './$SCRIPT select <number>'"
 }
