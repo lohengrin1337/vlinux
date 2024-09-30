@@ -33,6 +33,7 @@ RED="\033[0;31m"
 NO_COLOR="\033[0m"
 
 # source .game_config if exists (globals GAME_ID, ROOM_ID and MAPS_AVAILABLE)
+# shellcheck disable=SC1091
 [[ -f ".game_config" ]] && source ".game_config"
 
 
@@ -106,18 +107,40 @@ function curl_error
 }
 
 #
+# verify response is OK (code 200), and call response_error if not
+#
+function verify_response
+{
+    local response="$1"
+    local msg="$2"
+
+    if ! echo "$response" | head -n 1 | grep "200" &> /dev/null; then
+        response_error "$response" "$msg"
+    fi
+}
+
+#
 # handle response error
 #
 function response_error
 {
-    # get status code from header, and full content-body
-    status_code="$(echo "$res" | head -n 1 | grep -Ewo "[0-9]{3}")"
-    content="$(echo "$res" | tail -n 1)"
-    content="${content//\"{}/}" # remove quotes and curly brackets
+    local response="$1"
+    local msg="$2"
+    local status_code
+    local content
+    local text
+    local hint
 
-    echo "Unable to create new game!"
+    # get status code from header, and content from body
+    status_code="$(echo "$response" | head -n 1 | grep -Ewo "[0-9]{3}")"
+    content="$(echo "$response" | tail -n 1)"
+    text="$( echo "$content" | jq .text )"
+    hint="$( echo "$content" | jq .hint )"
+
+    [[ -n $msg ]] && echo "$msg"
     echo "Response code: $status_code"
-    echo "Content: $content"
+    echo "Message: $text"
+    echo "Hint: $hint"
     exit 1
 }
 
@@ -134,12 +157,14 @@ function get_maps
 
     # get maps from body (get the json-files from csv content in format 'map1.json map2.json')
     if ! maps="$(echo "$res" | tail -n 1 | grep -Eo "[[:alnum:]\-]+.json" | tr '\n' ' ')"; then
-        response_error "$res"
+        response_error "$res" "Unable to find maps!"
     fi
 
     # Add maps to .game_config as global array, and source the file
     echo "MAPS_AVAILABLE=($maps)" >> ".game_config"
-    source ".game_config"
+
+    # shellcheck disable=SC1091
+    [[ -f ".game_config" ]] && source ".game_config"
 }
 
 #
@@ -153,31 +178,28 @@ function verify_game_exists
         msg="$1" || \
         msg="STEP ONE: start a new game with './$SCRIPT init'"
 
-    # set optional exit code ($2), else default
+    # set optional exit code ($2), else default code (1)
     local exit_code
     [[ -n $2 ]] && \
         exit_code="$2" || \
         exit_code="1"
 
     # check if GAME_ID is unset (sourced with .game_config)
+    # shellcheck disable=SC2153
     if [[ -z $GAME_ID ]]; then
         echo "$msg"
         exit "$exit_code"
     fi
+}
 
-
-    # local default_msg="STEP ONE: start a new game with './$SCRIPT init'"
-    # local default_exit_code=1
-    # local msg="$1"          # optional message argument
-    # local exit_code="$2"    # optional code argument (default 1)
-
-    # if [[ -z $GAME_ID ]]; then
-    #     [[ -n $msg ]] && echo "$msg" || \
-    #         echo "STEP ONE: start a new game with './$SCRIPT init'"
-
-    #     [[ -z $exit_code ]] && exit $default_exit_code
-    #     exit $exit_code
-    # fi
+#
+# check if ROOM_ID is set in .game_config
+#
+function verify_room_exists
+{
+    [[ -z $ROOM_ID ]] && \
+        echo "NEXT STEP: enter first room with './$SCRIPT enter'" && \
+        exit 1
 }
 
 
@@ -199,7 +221,7 @@ function app_init
 
     # get game id from body
     if ! game_id="$(echo "$res" | tail -n 1 | grep -Ewo "[0-9]{5}")"; then
-        response_error "$res"
+        response_error "$res" "Unable to create a new game!"
     fi
 
     # save game id to global GAME_ID in .game_config
@@ -266,7 +288,7 @@ function app_select
 
     # get text content
     if ! response_text="$(echo "$res" | tail -n 1 | grep -o "New map selected")"; then
-        response_error "$res"
+        response_error "$res" "Unable to select map '$map'!"
     fi
 
     echo "$response_text: ${map%.json}"
@@ -278,7 +300,36 @@ function app_select
 #
 function app_enter
 {
-    true
+    # exit and inform user to init game if not done
+    verify_game_exists
+
+    # request '/<game_id>/maze' (header and body(json), silent, include error from curl)
+    url="${BASE_URL}/${GAME_ID}/maze"
+    if ! res="$( curl -isS "$url" )"; then
+        curl_error "$url" "$res"
+    fi
+
+    # check response code is 200
+    verify_response "$res" "Unable to enter first room!"
+
+    # get json body
+    body="$( echo "$res" | tail -n 1 )"
+
+    # use jq to parse json
+    room_id="$( echo "$body" | jq -r .roomid )"
+    description="$( echo "$body" | jq -r .description )"
+
+    # get the available directions (eg. has a room number, and not a '-')
+    valid_directions=($(echo "$body" | jq -r '.directions | to_entries[] | select(.value != "-") | .key'))
+
+    # save room id to .game_config ROOM_ID
+    echo "ROOM_ID=$room_id" >> ".game_config"
+
+    # print info
+    echo "You have entered the first room."
+    echo "Description: $description"
+    echo "You find doors in the following directions: ${valid_directions[*]}"
+    echo "NEXT STEP: enter an adjecent room with './$SCRIPT go <direction>'"
 }
 
 #
@@ -286,7 +337,26 @@ function app_enter
 #
 function app_info
 {
-    true
+    # exit and inform user to init game, if GAME_ID is undefined
+    verify_game_exists
+
+    # exit and inform user to enter the maze, if ROOM_ID is undefined
+    verify_room_exists
+
+    # /42580/maze/5
+    # request '/<game_id>/maze/<room_id>' (header and body (json), silent, include error from curl)
+    url="${BASE_URL}/${GAME_ID}/maze/${ROOM_ID}"
+    if ! res="$( curl -isS "$url" )"; then
+        curl_error "$url" "$res"
+    fi
+
+    # check response code is 200
+    verify_response "$res" "Unable to get info!"
+
+    body="$( echo "$res" | tail -n 1 )"
+
+
+
 }
 
 #
