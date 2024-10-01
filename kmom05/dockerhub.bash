@@ -74,7 +74,7 @@ function cleanup_and_exit
 # create network, and check status
 if ! docker network create "$NETWORK"; then
     echo "Failed to create network!"
-    exit 1
+    cleanup_and_exit 1
 fi
 
 # run maze server (detached mode), and check status
@@ -100,10 +100,13 @@ if ! docker run -it --rm \
     --net $NETWORK \
     --link "$SERVER_CONTAINER:$SERVER_CONTAINER" \
     -v "$(pwd)/maze/client/mazerunner.bash:/client/mazerunner.bash" \
+    -v "$(pwd)/maze/client/core.bash:/client/core.bash" \
+    -v "$(pwd)/maze/client/utils.bash:/client/utils.bash" \
+    -v "$(pwd)/maze/client/variables.bash:/client/variables.bash" \
     "$CLIENT_IMAGE"
 then
     # fail
-    echo "Failed to run maze client!"
+    echo "Mazerunner-client closed and removed"
     cleanup_and_exit 1
 fi
 

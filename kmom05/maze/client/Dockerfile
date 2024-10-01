@@ -5,6 +5,6 @@ RUN apt update && \
 
 WORKDIR /client
 
-COPY mazerunner.bash .
+COPY mazerunner.bash core.bash utils.bash variables.bash ./
 
 ENTRYPOINT [ "bash" ]
