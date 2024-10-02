@@ -12,7 +12,7 @@ source "variables.bash"
 # source util functions
 source "utils.bash"
 
-# source core functions (app_xxx)
+# source core functions
 source "core.bash"
 
 # source .game_config if exists (globals GAME_ID, ROOM_ID and MAPS_AVAILABLE)

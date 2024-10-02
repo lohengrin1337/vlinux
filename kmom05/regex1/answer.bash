@@ -228,11 +228,10 @@ assertEqual "1.8" false
 
 
 
-ANSWER="$( grep -Eo "(\w+\s){4}\w+" $FILE )"
-# ANSWER="$( grep -E "^(\w+,){2}(\w+\s){4}(\w+)," $FILE )"
+ANSWER="$( grep -Eo "([[:alpha:]åäöÅÄÖ]+[[:space:]]){4}[[:alpha:]åäöÅÄÖ]+" $FILE )"
 
 # I will now test your answer - change false to true to get a hint.
-assertEqual "1.9" false
+assertEqual "1.9" true
 
 #"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Exercise 1.10 (1 points) 
@@ -253,7 +252,7 @@ assertEqual "1.9" false
 
 
 
-ANSWER="$( grep -Eo "[[:alnum:].]+@r\w+[aouåeiyäö]\.\w+$" $FILE )"
+ANSWER="$( grep -Eo "[[:alnum:]é.]+@r\w+[aouåeiyäö]\.\w+$" $FILE )"
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "1.10" true

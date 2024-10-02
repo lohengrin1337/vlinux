@@ -43,7 +43,7 @@ function usage
         ""
         "Options:"
         "   --help, -h                      Print help."
-        "   --version, -h                   Print version."
+        "   --version, -v                   Print version."
     )
 
     pretty_print "${txt[@]}"
@@ -93,6 +93,8 @@ function request_maze_server
         curl_error "$url"
     fi
 
+    export RESPONSE
+
     # check response is OK
     if ! response_is_ok; then
         response_error
@@ -136,8 +138,8 @@ function response_error
     # parse text content from json response body
     text="$( echo "$RESPONSE" | tail -n 1 | jq -r '.text')"
 
-    body="$( echo "$RESPONSE" | tail -n 1 | jq -r .)"
-    echo -e "$body"
+    # body="$( echo "$RESPONSE" | tail -n 1 | jq -r .)"
+    # echo -e "$body"
 
     local txt
     case "$text" in
@@ -168,11 +170,6 @@ function get_maps
 {
     # request '/map'
     request_maze_server "/map"
-
-    # # check response is OK
-    # if ! response_is_ok; then
-    #     response_error
-    # fi
 
     # get json-maps from response body with jq, as string ("map1.json map2.json")
     maps="$( echo "$RESPONSE" | tail -n 1 | jq -r 'join(" ")' )"
@@ -206,6 +203,7 @@ function verify_game_exists
     if ! game_exists; then
         msg=${1:-"${NEXT_STEP["init"]}"}
         exit_code=${2:-"1"}
+
         pretty_print -red "$msg"
         exit "$exit_code"
     fi
@@ -267,6 +265,7 @@ function verify_map_not_selected
 #
 function room_exists
 {
+    # shellcheck disable=SC2153
     [[ -n $ROOM_ID ]]
 }
 
@@ -306,6 +305,7 @@ function parse_room_info
     ROOM_INFO["id"]="$room_id"
     ROOM_INFO["description"]="$description"
     ROOM_INFO["valid_directions"]="You find doors in the following directions: $valid_directions"
+    export ROOM_INFO
 }
 
 
@@ -319,7 +319,7 @@ function verify_direction
     direction="$1"
 
     # use the direction (user input) in regex, to match a valid direction
-    if ! [[ $all_directions =~ [[:space:]]$direction[[:space:]] ]]; then
+    if ! [[ $all_directions =~ [[:space:]]${direction}[[:space:]] ]]; then
         msg="${2:-"Invalid direction '$direction'"}"
         pretty_print -red "$msg"
         exit 1
@@ -357,4 +357,6 @@ function prepare_room_info
             "${NEXT_STEP["go"]}"
         )
     fi
+
+    export TEXT_TO_PRINT
 }

@@ -52,12 +52,12 @@ function app_maps
     done
 
     # check which next step is
-    next="select"
+    next="${NEXT_STEP["select"]}"
     if ! game_exists; then
-        next="init"
+        next="${NEXT_STEP["init"]}"
     fi
 
-    pretty_print "${map_selection[@]}" "${NEXT_STEP["$next"]}"
+    pretty_print "${map_selection[@]}" "$next"
 }
 
 
@@ -92,6 +92,7 @@ function app_select
     map="$( echo "$MAPS_AVAILABLE" | cut -f "$num" -d ' ')"
 
     # request '/<game_id>/map/<map_name>', save RESPONSE
+    # shellcheck disable=SC2153
     request_maze_server "/${GAME_ID}/map/${map}"
 
     # save SELECTED_MAP to .game_config to prevent re-select (which will make server fail)

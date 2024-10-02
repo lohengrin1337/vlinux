@@ -93,16 +93,11 @@ fi
 echo "Mazerunner-server is running from container '$SERVER_CONTAINER', accessible from '$URL'"
 echo "Starting Mazerunner-client from container '$CLIENT_CONTAINER'"
 
-# REBUILD AND PUSH CLIENT DOCKERFILE, AND REMOVE -v OPTION
 # run maze client (interactive mode), and check status
 if ! docker run -it --rm \
     --name "$CLIENT_CONTAINER" \
     --net $NETWORK \
     --link "$SERVER_CONTAINER:$SERVER_CONTAINER" \
-    -v "$(pwd)/maze/client/mazerunner.bash:/client/mazerunner.bash" \
-    -v "$(pwd)/maze/client/core.bash:/client/core.bash" \
-    -v "$(pwd)/maze/client/utils.bash:/client/utils.bash" \
-    -v "$(pwd)/maze/client/variables.bash:/client/variables.bash" \
     "$CLIENT_IMAGE"
 then
     # fail
@@ -115,3 +110,8 @@ echo "Mazerunner-client closed and removed"
 
 # clean up an exit with status 0
 cleanup_and_exit 0
+
+# -v "$(pwd)/maze/client/mazerunner.bash:/client/mazerunner.bash" \
+# -v "$(pwd)/maze/client/core.bash:/client/core.bash" \
+# -v "$(pwd)/maze/client/utils.bash:/client/utils.bash" \
+# -v "$(pwd)/maze/client/variables.bash:/client/variables.bash" \
