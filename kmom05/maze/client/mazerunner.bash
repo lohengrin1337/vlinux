@@ -54,5 +54,7 @@ function main
     badUsage
 }
 
+
+
 # run main with arguments
 main "$@"

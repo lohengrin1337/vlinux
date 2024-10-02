@@ -4,38 +4,30 @@
 ## Core functions for mazerunner cli
 ##
 
+
+
 #
-# init game, and save id to 'game_id'
+# init game, and save id to GAME_ID (.game_config)
 #
 function app_init
 {
-    # # request '/' (header and body(csv), silent, include error from curl)
-    # url="$BASE_URL/$TO_CSV"
-    # if ! res="$(curl -isS "$url")"; then
-    #     curl_error "$url" "$res"
-    # fi
-
-    # request '/'
+    # request '/', save RESPONSE
     request_maze_server "/"
-
-    # check response is 200
-    if ! response_is_ok; then
-        response_error
-    fi
 
     # get game id from body
     game_id="$(echo "$RESPONSE" | tail -n 1 | grep -Ewo "[0-9]{5}")"
 
     # save game id to global GAME_ID in .game_config
-    echo "GAME_ID=$game_id" > ".game_config"    # replace any earlier content (fresh game)
+    echo "GAME_ID=$game_id" > ".game_config"        # replace any earlier content (fresh game)
 
-    pretty_print \
-        "A new game is created with id: $game_id" \
-        "NEXT STEP: show maps with '$SCRIPT maps'"
+    txt=(
+        "A new game is created"
+        "${NEXT_STEP["maps"]}"
+    )
 
-    # echo "A new game is created with id: $game_id"
-    # echo "NEXT STEP: show maps with '$SCRIPT maps'"
+    pretty_print "${txt[@]}"
 }
+
 
 
 #
@@ -44,24 +36,31 @@ function app_init
 function app_maps
 {
     # get available maps into MAPS_AVAILABLE, if not set
-    [[ -z $MAPS_AVAILABLE ]] && get_maps
+    [[ -z $MAPS_AVAILABLE ]] && \
+        get_maps
 
-    # check that at least one map is available
-    [[ ${#MAPS_AVAILABLE[@]} -lt 1 ]] && \
-        echo "No maps were currently available!" && exit 1
+    # check that MAPS_AVAILABLE is not an empty string
+    [[ -z $MAPS_AVAILABLE ]] && \
+        pretty_print -red "No maps were currently available!" && exit 1
 
-    echo "Available maps:"
-
-    # print each map with a number (index +1), and without file extension
-    for i in "${!MAPS_AVAILABLE[@]}"; do
-        echo "$((i + 1)): ${MAPS_AVAILABLE[$i]%.json}"
+    # get each map with a number, and without file extension
+    declare -a map_selection
+    i=1
+    for map in $MAPS_AVAILABLE; do
+        map_selection+=("$i: ${map%.json}")
+        (( i++ ))
     done
 
-    # inform user to init game if not done
-    verify_game_exists "" 0
+    # check which next step is
+    next="select"
+    if ! game_exists; then
+        next="init"
+    fi
 
-    echo "NEXT STEP: select a map with './$SCRIPT select <number>'"
+    pretty_print "${map_selection[@]}" "${NEXT_STEP["$next"]}"
 }
+
+
 
 #
 # select a map (number)
@@ -71,73 +70,69 @@ function app_select
     # check game is existing
     verify_game_exists
 
-    # get available maps into MAPS_AVAILABLE, if not set, and count maps
-    [[ -z $MAPS_AVAILABLE ]] && get_maps
-    map_count=${#MAPS_AVAILABLE[@]}
+    # check map is not already selected
+    verify_map_not_selected
 
-    # check at least one map is available
+    # get available maps into MAPS_AVAILABLE, if not set
+    [[ -z $MAPS_AVAILABLE ]] && get_maps
+
+    # count maps
+    map_count="$( echo "$MAPS_AVAILABLE" | wc -w )"
+
+    # check that at least one map is available
     [[ $map_count -lt 1 ]] && \
-        echo "No maps were currently available!" && exit 1
+        pretty_print -red "No maps were currently available!" && exit 1
 
     # check for empty or invalid number argument
     num="$1"
     [[ ! $num =~ ^[0-9]+$ || $num -lt 1 || $num -gt $map_count ]] && \
-        badUsage "Argument for 'select' has to be an integer in the range 1-$map_count!"
+        badUsage "$num" "Argument for 'select' has to be an integer in the range 1-$map_count!"
 
-    # select map (convert number to index)
-    map="${MAPS_AVAILABLE[$((num - 1))]}"
+    # get selected map
+    map="$( echo "$MAPS_AVAILABLE" | cut -f "$num" -d ' ')"
 
-    # request '/<game_id>/map/<map_name>' (header and body(csv), silent, include error from curl)
-    url="${BASE_URL}/${GAME_ID}/map/${map}${TO_CSV}"
-    if ! res="$(curl -isS "$url")"; then
-        curl_error "$url" "$res"
-    fi
+    # request '/<game_id>/map/<map_name>', save RESPONSE
+    request_maze_server "/${GAME_ID}/map/${map}"
+
+    # save SELECTED_MAP to .game_config to prevent re-select (which will make server fail)
+    echo -e "SELECTED_MAP=\"$map\"" >> ".game_config"
 
     # get text content
-    if ! response_text="$(echo "$res" | tail -n 1 | grep -o "New map selected")"; then
-        response_error "$res" "Unable to select map '$map'!"
-    fi
+    text="$(echo "$RESPONSE" | tail -n 1 | jq -r '.text')"
 
-    echo "$response_text: ${map%.json}"
-    echo "NEXT STEP: enter first room with './$SCRIPT enter'"
+    pretty_print "${text%.}: ${map%.json}" "${NEXT_STEP["enter"]}"
 }
 
+
+
 #
-# enter first room, and save room id to 'data/room_id'
+# enter first room, and save ROOM_ID to .game_config
 #
 function app_enter
 {
-    # exit and inform user to init game if not done
+    # verify game is created, else exit and inform user to init game
     verify_game_exists
 
-    # request '/<game_id>/maze' (header and body(json), silent, include error from curl)
-    url="${BASE_URL}/${GAME_ID}/maze"
-    if ! res="$( curl -isS "$url" )"; then
-        curl_error "$url" "$res"
-    fi
+    # verify map is selected, else exit and inform user to select map
+    verify_map_is_selected
 
-    # check response code is 200
-    verify_response "$res" "Unable to enter first room!"
+    # request '/<game_id>/maze', save RESPONSE
+    request_maze_server "/${GAME_ID}/maze"
 
-    # get json body
-    body="$( echo "$res" | tail -n 1 )"
+    # parse RESPONSE into ROOM_INFO
+    parse_room_info
 
-    # use jq to parse json
-    room_id="$( echo "$body" | jq -r .roomid )"
-    description="$( echo "$body" | jq -r .description )"
+    # save new room id to .game_config ROOM_ID
+    echo "ROOM_ID=${ROOM_INFO["id"]}" >> ".game_config"
 
-    # get the available directions (eg. has a room number, and not a '-')
-    valid_directions=($(echo "$body" | jq -r '.directions | to_entries[] | select(.value != "-") | .key'))
-
-    # save room id to .game_config ROOM_ID
-    echo "ROOM_ID=$room_id" >> ".game_config"
+    # prepare relevant text in TEXT_TO_PRINT
+    prepare_room_info
 
     # print info
-    echo "You have entered the first room."
-    echo "Description: $description"
-    echo "You find doors in the following directions: ${valid_directions[*]}"
-    echo "NEXT STEP: enter an adjecent room with './$SCRIPT go <direction>'"
+    pretty_print "You have entered the first room" "${TEXT_TO_PRINT[@]}"
 }
+
+
 
 #
 # show room info of current room
@@ -150,33 +145,20 @@ function app_info
     # exit and inform user to enter the maze, if ROOM_ID is undefined
     verify_room_exists
 
-    # request '/<game_id>/maze/<room_id>' (header and body (json), silent, include error from curl)
-    url="${BASE_URL}/${GAME_ID}/maze/${ROOM_ID}"
-    if ! res="$( curl -isS "$url" )"; then
-        curl_error "$url" "$res"
-    fi
+    # request '/<game_id>/maze/<room_id>', save RESPONSE
+    request_maze_server "/${GAME_ID}/maze/${ROOM_ID}"
 
-    # check response code is 200
-    verify_response "$res" "Unable to get info!"
+    # parse RESPONSE into ROOM_INFO
+    parse_room_info
 
-    # get body part
-    body="$( echo "$res" | tail -n 1 )"
-
-    # use jq to parse json
-    room_id="$( echo "$body" | jq -r .roomid )"
-    description="$( echo "$body" | jq -r .description )"
-
-    # get the available directions (eg. has a room number, and not a '-')
-    valid_directions=($(echo "$body" | jq -r '.directions | to_entries[] | select(.value != "-") | .key'))
-
-    # save room id to .game_config ROOM_ID
-    # echo "ROOM_ID=$room_id" >> ".game_config"
+    # check if exit from maze was found, and prepare relevant text in TEXT_TO_PRINT
+    prepare_room_info
 
     # print info
-    echo "Description: $description"
-    echo "You find doors in the following directions: ${valid_directions[*]}"
-    echo "NEXT STEP: enter an adjecent room with './$SCRIPT go <direction>'"
+    pretty_print "${TEXT_TO_PRINT[@]}"
 }
+
+
 
 #
 # enter new room (if possible), and save ROOM_ID to .game_config
@@ -186,31 +168,25 @@ function app_go
     # exit and inform user to init game, if GAME_ID is undefined
     verify_game_exists
 
+    # exit and inform user to enter the maze, if ROOM_ID is undefined
+    verify_room_exists
+
     # check argument is one of four valid directions
     direction="$1"
     verify_direction "$direction"
 
-    # request '/<game_id>/maze/<room_id>/<direction>' (header and body (json), silent, include error from curl)
-    url="${BASE_URL}/${GAME_ID}/maze/${ROOM_ID}/${direction}"
-    if ! res="$( curl -isS "$url" )"; then
-        curl_error "$url" "$res"
-    fi
+    # request '/<game_id>/maze/<room_id>/<direction>', save RESPONSE
+    request_maze_server "/${GAME_ID}/maze/${ROOM_ID}/${direction}"
 
-    # get body part
-    body="$( echo "$res" | tail -n 1 )"
-
-    # use jq to parse json
-    room_id="$( echo "$body" | jq -r .roomid )"
-    description="$( echo "$body" | jq -r .description )"
-
-    # get the available directions (eg. has a room number, and not a '-')
-    valid_directions=($(echo "$body" | jq -r '.directions | to_entries[] | select(.value != "-") | .key'))
+    # parse RESPONSE into ROOM_INFO
+    parse_room_info
 
     # save new room id to .game_config ROOM_ID
-    echo "ROOM_ID=$room_id" >> ".game_config"
+    echo "ROOM_ID=${ROOM_INFO["id"]}" >> ".game_config"
+
+    # check if exit from maze was found, and prepare relevant text in TEXT_TO_PRINT
+    prepare_room_info
 
     # print info
-    echo "Description: $description"
-    echo "You find doors in the following directions: ${valid_directions[*]}"
-    echo "NEXT STEP: enter an adjecent room with './$SCRIPT go <direction>'"
+    pretty_print "${TEXT_TO_PRINT[@]}"
 }

@@ -27,8 +27,8 @@ case "$1" in
 esac
 
 # check if Docker is running
-if ! command -v docker &> /dev/null; then
-    echo "Please install/start Docker before running $SCRIPT!"
+if ! docker -v &> "/dev/null"; then
+    echo "Please start Docker before running $SCRIPT!"
     exit 1
 fi
 
