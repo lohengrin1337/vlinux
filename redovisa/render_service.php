@@ -13,12 +13,13 @@ function renderPage(string $template, ?string $markdownFile, array $data = []) {
     ]);
 
     if ($markdownFile) {
-        // Initialize Parsedown
-        $parsedown = new Parsedown();
-
         $markdownFilePath = __DIR__ . "/content/$markdownFile.md";
+
         if (file_exists($markdownFilePath)) {
-            // Load and parse the Markdown content
+            // Initialize Parsedown
+            $parsedown = new Parsedown();
+
+            // Load and parse the Markdown content, and add to $data
             $markdownContent = file_get_contents($markdownFilePath);
             $htmlContent = $parsedown->text($markdownContent);
             $data["content"] = $htmlContent;
