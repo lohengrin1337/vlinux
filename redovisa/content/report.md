@@ -55,6 +55,9 @@ Jag blev nöjd med save-funktionen, där jag kallar på scriptet rekursivt med r
 
 <h2 id="kmom05">kmom05</h2>
 
+Det var kul att jobba med mazerunner-scriptet. Eftersom scriptet växte snabbt valde jag bryta ut koden i moduler. `mazerunner.bash` är en main-fil, med funktionen `main`, som hanterar options/commands/argument, och anropar lämplig funktion. `core.bash` innehåller de centrala funtionerna för respektive kommando. `utils.bash` innehåller hjälpfuntioner, som utför små avgränsade uppgifter, vilka återanvänds på många ställen i koden. `variables.bash` definierar ett antal globala variabler, några med värden, och några tomma som sätts senare i funktioner. `.game_config` skapas vid `init`, och håller `GAME_ID`, `MAPS_AVAIABLE`, `SELECTED_MAP`, och `ROOM_ID`. Samtliga moduler läses in (`source`) från `mazerunner.bash`. Det hade kännts bäst att kunna använda servers response för att delge information, både vid lyckade och misslyckade requests, men svaren var inte tillräckligt bra, så jag fick göra kontroll för `maps` och `enter` på klient-sidan. Servern krachar om man gör `enter` före `select`, och ett otydligt svar ges när man försöker köra `select` två gånger.
+
+
 <h2 id="kmom06">kmom06</h2>
 
 <h2 id="kmom10">kmom10</h2>
