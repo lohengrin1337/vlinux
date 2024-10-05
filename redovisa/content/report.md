@@ -55,8 +55,14 @@ Jag blev nöjd med save-funktionen, där jag kallar på scriptet rekursivt med r
 
 <h2 id="kmom05">kmom05</h2>
 
-Det var kul att jobba med mazerunner-scriptet. Eftersom scriptet växte snabbt valde jag bryta ut koden i moduler. `mazerunner.bash` är en main-fil, med funktionen `main`, som hanterar options/commands/argument, och anropar lämplig funktion. `core.bash` innehåller de centrala funtionerna för respektive kommando. `utils.bash` innehåller hjälpfuntioner, som utför små avgränsade uppgifter, vilka återanvänds på många ställen i koden. `variables.bash` definierar ett antal globala variabler, några med värden, och några tomma som sätts senare i funktioner. `.game_config` skapas vid `init`, och håller `GAME_ID`, `MAPS_AVAIABLE`, `SELECTED_MAP`, och `ROOM_ID`. Samtliga moduler läses in (`source`) från `mazerunner.bash`. Det hade kännts bäst att kunna använda servers response för att delge information, både vid lyckade och misslyckade requests, men svaren var inte tillräckligt bra, så jag fick göra kontroll för `maps` och `enter` på klient-sidan. Servern krachar om man gör `enter` före `select`, och ett otydligt svar ges när man försöker köra `select` två gånger.
+Det var kul att jobba med mazerunner-scriptet, och det flöt på bra tycker jag. När jag började på uppgiften *parsade* jag csv-strängar med `grep` och `cut`, vilket var lite onödigt krångligt. Jag gick över till att *parsa* `json` med `jq` istället, vilket underlättade.
 
+Det var intressant att kolla lite på källkoden för servern, för att lära sig något om hur man kan jobba med request och response manuellt i backend.
+Det hade känts bäst att kunna använda serverns responses för att delge information, både vid lyckade och misslyckade requests, men svaren var inte tillräckligt bra, så jag gjorde kontroll för `maps` och `enter` på klient-sidan. Servern krachar till exempel om man gör `enter` före `select`, och ett otydligt svar ges när man försöker köra `select` två gånger.
+
+Eftersom scriptet växte snabbt valde jag bryta ut koden i moduler. `mazerunner.bash` är en main-fil, med funktionen `main`, som hanterar options/commands/argument, och anropar lämplig funktion. `core.bash` innehåller de centrala funtionerna för respektive kommando. `utils.bash` innehåller hjälpfuntioner, som utför små avgränsade uppgifter, vilka återanvänds på många ställen i koden. `variables.bash` definierar ett antal globala variabler, några med värden, och några tomma som sätts senare i funktioner. `.game_config` skapas vid `init`, och håller `GAME_ID`, `MAPS_AVAIABLE`, `SELECTED_MAP`, och `ROOM_ID`. Samtliga moduler läses in (`source`) från `mazerunner.bash`.
+
+Reguljära uttryck har dykt upp lite då och då under utbildningen, men det är inte förrän nu jag börjar på grepp om det. Det finns en hel del mer att lära, men jag känner att jag kommit över tröskeln för att det ska kännas kul och hyfsat bekvämt.
 
 <h2 id="kmom06">kmom06</h2>
 
