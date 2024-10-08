@@ -1,7 +1,7 @@
 #!/usr/bin/env awk
 
 #
-# print first- and lastname plus town, from first 100 rows
+# print all first- and lastname plus phone, with headers
 #
 
 #
@@ -13,26 +13,50 @@ function skipFirstRow() {
 }
 
 #
+# multiply a string n times
+#
+function multiplyStr(str, n) {
+    res=""
+    for (i = 0; i < n; i++) {
+        res = res str
+    }
+    return res
+}
+
+#
 # print linesToPrint, with header and footer
 #
 function print_lines(lines) {
-    printf()
+    format = "\n  " multiplyStr("%-20s", cols) "\n"
+    printf(format, header[1], header[2], header[3])
+
+    print(multiplyStr("-", 20 * cols) "--")
 
     for (key in lines) {
-        print("key: ", key, "line: ", lines[key])
+        split(lines[key], line)
+        format = "  " multiplyStr("%-20s", cols) "\n"
+        printf(format, line[1], line[2], line[5])
     }
+
+    print(multiplyStr("-", 20 * cols) "--\n")
 }
 
 BEGIN {
-    FS=","
-    start=1
-    finish=5
+    FS = ","
+    start = 1
+    finish = -1
+
+    header[1] = "Förnamn"
+    header[2] = "Efternamn"
+    header[3] = "Telefonnummer"
+
+    cols = length(header)
 
     skipFirstRow()
 }
 
 NR >= start {
-    linesToPrint[NR] = $1
+    linesToPrint[NR] = $0
 }
 
 NR == finish { exit 0 }
