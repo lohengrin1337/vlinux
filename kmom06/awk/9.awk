@@ -10,22 +10,24 @@ BEGIN {
     cmd = "awk -f 8.awk " inputFile
     count = 0
 
-    while (cmd | getline result) {
-        print(result)
+    # get result of cmd, one line at a time
+    while (cmd | getline line) {
+        print(line)
 
-        split(result, resArr)
-        split(resArr[2], birth, "-")
+        # parse year from each line
+        split(line, fields)
+        split(fields[2], birth, "-")
         year = birth[1]
 
+        # count people born before 2000
         if (year < 2000) {
             count++
         }
     }
 
+    # close stream
     close(cmd)
-}
 
-END {
     print(multiplyStr("-", 50))
     print(count " stycken är födda innan år 2000.")
 }
