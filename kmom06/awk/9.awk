@@ -11,11 +11,11 @@ BEGIN {
     count = 0
 
     # get result of cmd, one line at a time
-    while (cmd | getline line) {
-        print(line)
+    while (( cmd | getline result ) > 0) {
+        print(result)
 
         # parse year from each line
-        split(line, fields)
+        split(result, fields)
         split(fields[2], birth, "-")
         year = birth[1]
 

@@ -35,6 +35,7 @@ function print_lines(lines) {
     for (key in lines) {
         split(lines[key], line)
         format = "  " multiplyStr("%-20s", cols) "\n"
+
         printf(format, line[1], line[2], line[5])
     }
 

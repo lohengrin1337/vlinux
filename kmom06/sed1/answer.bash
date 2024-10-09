@@ -225,10 +225,10 @@ regex_family_folder=".*Family\/$"
 
 family_folder=$(sed -E -n "/${regex_family_folder}/p" < $file)
 
-ANSWER=$( sed -E "/${regex_family_folder}/a${family_folder}Thor/selfie.png" < $file )
+ANSWER=$( sed -E "/${regex_family_folder}/a\\${family_folder}Thor/selfie.png" < $file )
 
 # I will now test your answer - change false to true to get a hint.
-assertEqual "2.4" true
+assertEqual "2.4" false
 
 #"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Exercise 2.5 (1 points) 
@@ -245,11 +245,9 @@ assertEqual "2.4" true
 
 
 
-# file="numbers.txt"
+file="access-medium.log"
 
-# ANSWER=$( sed -E -n '//p' < $file )
-
-ANSWER="Replace this text with the variable holding the answer."
+ANSWER=$( sed -E -n 's/.*([0-9]{2})\/([A-Za-z]{3})\/([0-9]{4}).*/\3-\2-\1/p' < $file )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "2.5" false
@@ -269,11 +267,9 @@ assertEqual "2.5" false
 
 
 
-# file="numbers.txt"
+file="access-medium.log"
 
-# ANSWER=$( sed -E -n '//p' < $file )
-
-ANSWER="Replace this text with the variable holding the answer."
+ANSWER=$( sed -E -n 's/^([4-6][0-9.]+).*/\1/p' < $file )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "2.6" false
@@ -299,11 +295,9 @@ assertEqual "2.6" false
 
 
 
-# file="numbers.txt"
+file="access-medium.log"
 
-# ANSWER=$( sed -E -n '//p' < $file )
-
-ANSWER="Replace this text with the variable holding the answer."
+ANSWER=$( sed -E -n 's/.*(https?:\/\/(www\.)?[a-z0-9.]+).*/\1/pg' < $file )
 
 # I will now test your answer - change false to true to get a hint.
 assertEqual "3.1" false
