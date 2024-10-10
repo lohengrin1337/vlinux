@@ -77,6 +77,27 @@ function verify_game_exists
 
 
 #
+# Verify number (select <num>) refers to an existing map
+#
+function verify_map_exists
+{
+    local number="$1"
+
+    # count maps
+    map_count="$( wc -w <<< "$MAPS_AVAILABLE" )"
+
+    # check that at least one map is available
+    [[ $map_count -lt 1 ]] && \
+        pretty_print -red "No maps were currently available!" && exit 1
+
+    # check for empty or invalid number argument
+    [[ ! $number =~ ^[0-9]+$ || $number -lt 1 || $number -gt $map_count ]] && \
+        badUsage "$number" "Argument for 'select' has to be an integer in the range 1-$map_count!"
+}
+
+
+
+#
 # verify map is selected, else exit with message
 #
 function verify_map_is_selected

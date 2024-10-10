@@ -17,9 +17,72 @@ function app_loop
     # show maps
     app_maps
 
-    # prompt user to select map
-    echo -e "Select a map:\n--> "
-    read selectedMap
+    while true; do
+        # prompt user to select map or help / quit
+        echo -e "Select a map (enter a number):\n--> "
+        read mapNumber
+
+        echo "input: '$mapNumber'"
+
+        vars=$(cat .game_config)
+        echo "$vars"
+
+        case "$mapNumber" in
+            ( "help" )
+                # print usage and help
+                usage
+            ;;
+
+            ( "quit" )
+                # quit
+                exit_friendly
+            ;;
+
+            ( * )
+                echo "case (*) map: '$mapNumber'"
+
+                # select the map, and break while-loop
+                app_select "$mapNumber"
+                break
+            ;;
+        esac
+    done
+
+    vars=$(cat .game_config)
+    echo "$vars"
+
+    # enter maze, and show room info
+    app_enter
+
+    vars=$(cat .game_config)
+    echo "$vars"
+
+    while ! exit_is_found; do
+        # promt user for a direction or info / help / quit
+        echo -e "Move to the next room (enter a direction):\n--> "
+        read direction
+
+        case "$direction" in
+            ( "info" )
+                app_info
+            ;;
+
+            ( "help" )
+                usage
+            ;;
+
+            ( "quit" )
+                exit_friendly
+            ;;
+
+            ( * )
+                app_go "$direction"
+            ;;
+        esac
+    done
+
+    # game is over, leave loop
+    exit_friendly
 }
 
 
@@ -37,6 +100,7 @@ function app_init
 
     # save game id to global GAME_ID in .game_config
     echo "GAME_ID=$game_id" > ".game_config"        # replace any earlier content (fresh game)
+    [ -f ".game_config" ] && source ".game_config"
 
     txt=(
         "A new game is created"
@@ -94,20 +158,12 @@ function app_select
     # get available maps into MAPS_AVAILABLE, if not set
     [[ -z $MAPS_AVAILABLE ]] && get_maps
 
-    # count maps
-    map_count="$( echo "$MAPS_AVAILABLE" | wc -w )"
-
-    # check that at least one map is available
-    [[ $map_count -lt 1 ]] && \
-        pretty_print -red "No maps were currently available!" && exit 1
-
-    # check for empty or invalid number argument
+    # check user input matches an existing map
     num="$1"
-    [[ ! $num =~ ^[0-9]+$ || $num -lt 1 || $num -gt $map_count ]] && \
-        badUsage "$num" "Argument for 'select' has to be an integer in the range 1-$map_count!"
+    verify_map_exists "$num"
 
     # get selected map
-    map="$( echo "$MAPS_AVAILABLE" | cut -f "$num" -d ' ')"
+    map="$( cut -f "$num" -d ' ' <<< "$MAPS_AVAILABLE")"
 
     # request '/<game_id>/map/<map_name>', save RESPONSE
     # shellcheck disable=SC2153
@@ -115,6 +171,7 @@ function app_select
 
     # save SELECTED_MAP to .game_config to prevent re-select (which will make server fail)
     echo -e "SELECTED_MAP=\"$map\"" >> ".game_config"
+    [ -f ".game_config" ] && source ".game_config"
 
     # get text content
     text="$(echo "$RESPONSE" | tail -n 1 | jq -r '.text')"
@@ -143,6 +200,7 @@ function app_enter
 
     # save new room id to .game_config ROOM_ID
     echo "ROOM_ID=${ROOM_INFO["id"]}" >> ".game_config"
+    [ -f ".game_config" ] && source ".game_config"
 
     # prepare relevant text in TEXT_TO_PRINT
     prepare_room_info
@@ -202,6 +260,7 @@ function app_go
 
     # save new room id to .game_config ROOM_ID
     echo "ROOM_ID=${ROOM_INFO["id"]}" >> ".game_config"
+    [ -f ".game_config" ] && source ".game_config"
 
     # check if exit from maze was found, and prepare relevant text in TEXT_TO_PRINT
     prepare_room_info

@@ -100,7 +100,7 @@ if ! docker run -it --rm \
     --net $NETWORK \
     --link "$SERVER_CONTAINER:$SERVER_CONTAINER" \
     -v "$(pwd)/maze2/client/mazerunner.bash:/client/mazerunner.bash" \
-    -v "$(pwd)/maze2/client/src/:/client/src/" \
+    -v "$(pwd)/maze2/client/src:/client/src" \
     "$CLIENT_IMAGE"
 then
     # fail

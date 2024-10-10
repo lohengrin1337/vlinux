@@ -34,6 +34,7 @@ function usage
         "Usage: $SCRIPT [options] <command> [arguments]"
         ""
         "Commands:"
+        "   loop                            run game loop"
         "   init                            init game"
         "   maps                            show maps"
         "   select <num>                    select map"
@@ -57,6 +58,18 @@ function usage
 function version
 {
     pretty_print "$SCRIPT version $VERSION"
+}
+
+
+
+#
+# exit on purpose with message, and clean up
+#
+function exit_friendly
+{
+    pretty_print "Good bye!"
+    rm ".game_config"
+    exit 0
 }
 
 
