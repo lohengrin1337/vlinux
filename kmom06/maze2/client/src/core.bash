@@ -8,14 +8,20 @@
 
 #
 # game loop for one continous game
+# use 'res=$(cmd)' to cature prints
 #
 function app_loop
 {
     # init a new game
-    app_init
+    res=$(app_init)
 
     # show maps
-    app_maps
+    res=$(app_maps)
+
+    map_selection=($(sed -n '3p;5p' <<< "$res"))
+
+    # print header and info
+    pretty_print "${MESSAGES["welcome"]}" "${MESSAGES["init"]}" "${map_selection[@]}"
 
     while true; do
         # prompt user to select map or help / quit
@@ -126,12 +132,13 @@ function app_maps
         pretty_print -red "No maps were currently available!" && exit 1
 
     # get each map with a number, and without file extension
-    declare -a map_selection
     i=1
     for map in $MAPS_AVAILABLE; do
-        map_selection+=("$i: ${map%.json}")
+        MAP_SELECTION+=("$i: ${map%.json}")
         (( i++ ))
     done
+
+    export MAP_SELECTION
 
     # check which next step is
     next="${NEXT_STEP["select"]}"
@@ -139,7 +146,7 @@ function app_maps
         next="${NEXT_STEP["init"]}"
     fi
 
-    pretty_print "${map_selection[@]}" "$next"
+    pretty_print "${MAP_SELECTION[@]}" "$next"
 }
 
 
@@ -268,3 +275,83 @@ function app_go
     # print info
     pretty_print "${TEXT_TO_PRINT[@]}"
 }
+
+
+# #
+# # game loop for one continous game
+# #
+# function app_loop
+# {
+#     # init a new game
+#     app_init
+
+#     # show maps
+#     app_maps
+
+#     while true; do
+#         # prompt user to select map or help / quit
+#         echo -e "Select a map (enter a number):\n--> "
+#         read mapNumber
+
+#         echo "input: '$mapNumber'"
+
+#         vars=$(cat .game_config)
+#         echo "$vars"
+
+#         case "$mapNumber" in
+#             ( "help" )
+#                 # print usage and help
+#                 usage
+#             ;;
+
+#             ( "quit" )
+#                 # quit
+#                 exit_friendly
+#             ;;
+
+#             ( * )
+#                 echo "case (*) map: '$mapNumber'"
+
+#                 # select the map, and break while-loop
+#                 app_select "$mapNumber"
+#                 break
+#             ;;
+#         esac
+#     done
+
+#     vars=$(cat .game_config)
+#     echo "$vars"
+
+#     # enter maze, and show room info
+#     app_enter
+
+#     vars=$(cat .game_config)
+#     echo "$vars"
+
+#     while ! exit_is_found; do
+#         # promt user for a direction or info / help / quit
+#         echo -e "Move to the next room (enter a direction):\n--> "
+#         read direction
+
+#         case "$direction" in
+#             ( "info" )
+#                 app_info
+#             ;;
+
+#             ( "help" )
+#                 usage
+#             ;;
+
+#             ( "quit" )
+#                 exit_friendly
+#             ;;
+
+#             ( * )
+#                 app_go "$direction"
+#             ;;
+#         esac
+#     done
+
+#     # game is over, leave loop
+#     exit_friendly
+# }

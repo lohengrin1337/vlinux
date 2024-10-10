@@ -24,6 +24,10 @@ export NO_COLOR="\033[0m"
 # response from maze-server set by 'request_maze_server'
 export RESPONSE
 
+# map selection with numbers to choose from
+declare -a MAP_SELECTION
+export MAP_SELECTION
+
 # 'id', 'description' and 'valid_directions' - parsed by 'parse_room_info'
 declare -A ROOM_INFO
 export ROOM_INFO
@@ -41,4 +45,12 @@ export NEXT_STEP=(
     ["enter"]="NEXT STEP: enter first room with '$SCRIPT enter'"
     ["info"]="Print room info with '$SCRIPT info'"
     ["go"]="NEXT STEP: enter an adjecent room with '$SCRIPT go <direction>'"
+)
+
+# list of messages
+declare -A MESSAGES
+export MESSAGES=(
+    ["welcome"]="<<< MAZERUNNER >>>"
+    ["init"]="A new game is created"
+    ["enter"]="You have entered the maze"
 )
