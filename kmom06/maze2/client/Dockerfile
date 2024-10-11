@@ -11,4 +11,4 @@ COPY src ./src
 
 ENTRYPOINT [ "bash" ]
 
-# CMD [ "mazerunner.bash", "loop" ]
+CMD [ "mazerunner.bash", "loop" ]

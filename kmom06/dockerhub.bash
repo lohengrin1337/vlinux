@@ -35,8 +35,7 @@ fi
 # set variables
 NETWORK="dbwebb"
 SERVER_IMAGE="lohengrin1337/vlinux-mazeserver:1.0"
-# CLIENT_IMAGE="lohengrin1337/vlinux-mazeclient:1.0"
-CLIENT_IMAGE="client-kmom06"
+CLIENT_IMAGE="lohengrin1337/maze-client:loop"
 SERVER_CONTAINER="maze-server"
 CLIENT_CONTAINER="maze-client"
 OUTSIDE_PORT="${DBWEBB_PORT:-8080}"
