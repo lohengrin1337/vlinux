@@ -85,8 +85,7 @@ function game_loop
 
                 # print info
                 pretty_print \
-                    "${ROOM_INFO["description"]}" \
-                    "${ROOM_INFO["valid_directions"]}"
+                    "${ROOM_INFO_PRINT[@]:0:2}"
             ;;
 
             ( * )
@@ -105,8 +104,7 @@ function game_loop
 
                 # print new room info
                 pretty_print \
-                    "${ROOM_INFO["description"]}" \
-                    "${ROOM_INFO["valid_directions"]}"
+                    "${ROOM_INFO_PRINT[@]:0:2}"
             ;;
         esac
     done

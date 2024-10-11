@@ -1,0 +1,22 @@
+networks:
+    dbwebb:
+
+services:
+    server:
+        image: lohengrin1337/vlinux-mazeserver:1.0
+        container_name: "maze-server"
+        networks:
+            dbwebb:
+        restart:
+            "always"
+
+    client:
+        image: lohengrin1337/vlinux-mazeclient:loop
+        container_name: "maze-client"
+        networks:
+            dbwebb:
+        links:
+           - server:maze-server
+
+
+# filename should rather be 'compose.yaml'
