@@ -7,93 +7,6 @@
 
 
 #
-# game loop for one continous game
-# use 'res=$(cmd)' to cature prints
-#
-function app_loop
-{
-    # init a new game
-    res=$(app_init)
-
-    # show maps
-    res=$(app_maps)
-
-    map_selection=($(sed -n '3p;5p' <<< "$res"))
-
-    # print header and info
-    pretty_print "${MESSAGES["welcome"]}" "${MESSAGES["init"]}" "${map_selection[@]}"
-
-    while true; do
-        # prompt user to select map or help / quit
-        echo -e "Select a map (enter a number):\n--> "
-        read mapNumber
-
-        echo "input: '$mapNumber'"
-
-        vars=$(cat .game_config)
-        echo "$vars"
-
-        case "$mapNumber" in
-            ( "help" )
-                # print usage and help
-                usage
-            ;;
-
-            ( "quit" )
-                # quit
-                exit_friendly
-            ;;
-
-            ( * )
-                echo "case (*) map: '$mapNumber'"
-
-                # select the map, and break while-loop
-                app_select "$mapNumber"
-                break
-            ;;
-        esac
-    done
-
-    vars=$(cat .game_config)
-    echo "$vars"
-
-    # enter maze, and show room info
-    app_enter
-
-    vars=$(cat .game_config)
-    echo "$vars"
-
-    while ! exit_is_found; do
-        # promt user for a direction or info / help / quit
-        echo -e "Move to the next room (enter a direction):\n--> "
-        read direction
-
-        case "$direction" in
-            ( "info" )
-                app_info
-            ;;
-
-            ( "help" )
-                usage
-            ;;
-
-            ( "quit" )
-                exit_friendly
-            ;;
-
-            ( * )
-                app_go "$direction"
-            ;;
-        esac
-    done
-
-    # game is over, leave loop
-    exit_friendly
-}
-
-
-
-#
 # init game, and save id to GAME_ID (.game_config)
 #
 function app_init
@@ -101,19 +14,22 @@ function app_init
     # request '/', save RESPONSE
     request_maze_server "/"
 
+    # check init was successfull
+    ! response_is_ok && response_error
+
     # get game id from body
     game_id="$(echo "$RESPONSE" | tail -n 1 | grep -Ewo "[0-9]{5}")"
 
     # save game id to global GAME_ID in .game_config
     echo "GAME_ID=$game_id" > ".game_config"        # replace any earlier content (fresh game)
+
+    # shellcheck disable=SC1091
     [ -f ".game_config" ] && source ".game_config"
 
-    txt=(
+    PRETTY_PRINT=(
         "A new game is created"
         "${NEXT_STEP["maps"]}"
     )
-
-    pretty_print "${txt[@]}"
 }
 
 
@@ -146,7 +62,10 @@ function app_maps
         next="${NEXT_STEP["init"]}"
     fi
 
-    pretty_print "${MAP_SELECTION[@]}" "$next"
+    PRETTY_PRINT=(
+        "${MAP_SELECTION[@]}"
+        "$next"
+    )
 }
 
 
@@ -176,14 +95,22 @@ function app_select
     # shellcheck disable=SC2153
     request_maze_server "/${GAME_ID}/map/${map}"
 
+    # check select was successfull
+    ! response_is_ok && response_error
+
     # save SELECTED_MAP to .game_config to prevent re-select (which will make server fail)
     echo -e "SELECTED_MAP=\"$map\"" >> ".game_config"
+
+    # shellcheck disable=SC1091
     [ -f ".game_config" ] && source ".game_config"
 
     # get text content
     text="$(echo "$RESPONSE" | tail -n 1 | jq -r '.text')"
 
-    pretty_print "${text%.}: ${map%.json}" "${NEXT_STEP["enter"]}"
+    PRETTY_PRINT=(
+        "${text%.}: ${map%.json}"
+        "${NEXT_STEP["enter"]}"
+    )
 }
 
 
@@ -202,18 +129,25 @@ function app_enter
     # request '/<game_id>/maze', save RESPONSE
     request_maze_server "/${GAME_ID}/maze"
 
+    # check enter was successfull
+    ! response_is_ok && response_error
+
     # parse RESPONSE into ROOM_INFO
     parse_room_info
 
     # save new room id to .game_config ROOM_ID
     echo "ROOM_ID=${ROOM_INFO["id"]}" >> ".game_config"
+
+    # shellcheck disable=SC1091
     [ -f ".game_config" ] && source ".game_config"
 
-    # prepare relevant text in TEXT_TO_PRINT
+    # prepare relevant text in ROOM_INFO_PRINT
     prepare_room_info
 
-    # print info
-    pretty_print "You have entered the first room" "${TEXT_TO_PRINT[@]}"
+    PRETTY_PRINT=(
+        "You have entered the first room"
+        "${ROOM_INFO_PRINT[@]}"
+    )
 }
 
 
@@ -232,14 +166,18 @@ function app_info
     # request '/<game_id>/maze/<room_id>', save RESPONSE
     request_maze_server "/${GAME_ID}/maze/${ROOM_ID}"
 
+    # check info-response was successfull
+    ! response_is_ok && response_error
+
     # parse RESPONSE into ROOM_INFO
     parse_room_info
 
-    # check if exit from maze was found, and prepare relevant text in TEXT_TO_PRINT
+    # check if exit from maze was found, and prepare relevant text in ROOM_INFO_PRINT
     prepare_room_info
 
-    # print info
-    pretty_print "${TEXT_TO_PRINT[@]}"
+    PRETTY_PRINT=(
+        "${ROOM_INFO_PRINT[@]}"
+    )
 }
 
 
@@ -262,96 +200,27 @@ function app_go
     # request '/<game_id>/maze/<room_id>/<direction>', save RESPONSE
     request_maze_server "/${GAME_ID}/maze/${ROOM_ID}/${direction}"
 
-    # parse RESPONSE into ROOM_INFO
-    parse_room_info
+    # check go-response was successfull
+    if ! response_is_ok; then
+        export PRETTY_PRINT=(
+            "There is no door in that direction"
+            "${NEXT_STEP["info"]}"
+        )
+    else
+        # parse RESPONSE into ROOM_INFO
+        parse_room_info
 
-    # save new room id to .game_config ROOM_ID
-    echo "ROOM_ID=${ROOM_INFO["id"]}" >> ".game_config"
-    [ -f ".game_config" ] && source ".game_config"
+        # save new room id to .game_config ROOM_ID
+        echo "ROOM_ID=${ROOM_INFO["id"]}" >> ".game_config"
 
-    # check if exit from maze was found, and prepare relevant text in TEXT_TO_PRINT
-    prepare_room_info
+        # shellcheck disable=SC1091
+        [ -f ".game_config" ] && source ".game_config"
 
-    # print info
-    pretty_print "${TEXT_TO_PRINT[@]}"
+        # check if exit from maze was found, and prepare relevant text in ROOM_INFO_PRINT
+        prepare_room_info
+
+        export PRETTY_PRINT=(
+            "${ROOM_INFO_PRINT[@]}"
+        )
+    fi
 }
-
-
-# #
-# # game loop for one continous game
-# #
-# function app_loop
-# {
-#     # init a new game
-#     app_init
-
-#     # show maps
-#     app_maps
-
-#     while true; do
-#         # prompt user to select map or help / quit
-#         echo -e "Select a map (enter a number):\n--> "
-#         read mapNumber
-
-#         echo "input: '$mapNumber'"
-
-#         vars=$(cat .game_config)
-#         echo "$vars"
-
-#         case "$mapNumber" in
-#             ( "help" )
-#                 # print usage and help
-#                 usage
-#             ;;
-
-#             ( "quit" )
-#                 # quit
-#                 exit_friendly
-#             ;;
-
-#             ( * )
-#                 echo "case (*) map: '$mapNumber'"
-
-#                 # select the map, and break while-loop
-#                 app_select "$mapNumber"
-#                 break
-#             ;;
-#         esac
-#     done
-
-#     vars=$(cat .game_config)
-#     echo "$vars"
-
-#     # enter maze, and show room info
-#     app_enter
-
-#     vars=$(cat .game_config)
-#     echo "$vars"
-
-#     while ! exit_is_found; do
-#         # promt user for a direction or info / help / quit
-#         echo -e "Move to the next room (enter a direction):\n--> "
-#         read direction
-
-#         case "$direction" in
-#             ( "info" )
-#                 app_info
-#             ;;
-
-#             ( "help" )
-#                 usage
-#             ;;
-
-#             ( "quit" )
-#                 exit_friendly
-#             ;;
-
-#             ( * )
-#                 app_go "$direction"
-#             ;;
-#         esac
-#     done
-
-#     # game is over, leave loop
-#     exit_friendly
-# }

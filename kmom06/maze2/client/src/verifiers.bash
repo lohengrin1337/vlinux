@@ -38,6 +38,36 @@ function map_is_selected
 
 
 #
+# check if a selected map is valid (user input)
+#
+function map_selection_is_valid
+{
+    local number="$1"
+    regex_positive_int="^[0-9]+$"
+    map_count="$( wc -w <<< "$MAPS_AVAILABLE" )"
+
+    # check number argument is valid (integer between 1 and map count)
+    [[ $number =~ $regex_positive_int && $number -ge 1 && $number -le $map_count ]]
+}
+
+
+
+#
+# check direction is valid (user input)
+#
+function direction_is_valid
+{
+    valid_directions=" north east south west "
+    direction="$1"
+    regex="[[:space:]]${direction}[[:space:]]"
+
+    # use the direction (user input) in regex, to match a valid direction
+    [[ $valid_directions =~ $regex ]]
+}
+
+
+
+#
 # check if ROOM_ID is set
 #
 function room_exists
@@ -91,8 +121,9 @@ function verify_map_exists
         pretty_print -red "No maps were currently available!" && exit 1
 
     # check for empty or invalid number argument
-    [[ ! $number =~ ^[0-9]+$ || $number -lt 1 || $number -gt $map_count ]] && \
+    if ! map_selection_is_valid "$number"; then
         badUsage "$number" "Argument for 'select' has to be an integer in the range 1-$map_count!"
+    fi
 }
 
 
@@ -156,11 +187,10 @@ function verify_room_exists
 #
 function verify_direction
 {
-    all_directions=" north east south west "
     direction="$1"
 
     # use the direction (user input) in regex, to match a valid direction
-    if ! [[ $all_directions =~ [[:space:]]${direction}[[:space:]] ]]; then
+    if ! direction_is_valid "$direction"; then
         msg="${2:-"Invalid direction '$direction'"}"
         pretty_print -red "$msg"
         exit 1

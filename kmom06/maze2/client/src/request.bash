@@ -16,14 +16,9 @@ function request_maze_server
     url="${BASE_URL}${route}"
 
     # request server, save response, and handle possible error from curl
-    if ! RESPONSE="$(curl -isS "$url")"; then
+    if ! RESPONSE="$(curl -isS "$url" 2>&1)"; then
         curl_error "$url"
     fi
 
     export RESPONSE
-
-    # check response is OK
-    if ! response_is_ok; then
-        response_error
-    fi
 }

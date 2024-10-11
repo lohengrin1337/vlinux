@@ -32,9 +32,13 @@ export MAP_SELECTION
 declare -A ROOM_INFO
 export ROOM_INFO
 
-# array with text strings to print
-declare -a TEXT_TO_PRINT
-export TEXT_TO_PRINT
+# array with prepared room info to print
+declare -a ROOM_INFO_PRINT
+export ROOM_INFO_PRINT
+
+# array with text strings to print with pretty_print
+declare -a PRETTY_PRINT
+export PRETTY_PRINT
 
 # list of next steps for the user
 declare -A NEXT_STEP
@@ -50,7 +54,11 @@ export NEXT_STEP=(
 # list of messages
 declare -A MESSAGES
 export MESSAGES=(
-    ["welcome"]="<<< MAZERUNNER >>>"
+    ["welcome"]="<<< MAZERUNNER GAME LOOP >>>"
     ["init"]="A new game is created"
-    ["enter"]="You have entered the maze"
+    ["maps"]="Maps available:"
+    ["select"]="Select a map (enter a number):"
+    ["invalid_map"]="Invalid map selection (use '1', '2' etc, or 'help')"
+    ["invalid_direction"]="Invalid direction (use 'north', 'east', 'south', 'west', or 'help')"
+    ["invalid_door"]="There is no door in that direction (use 'info' to see available directions)"
 )

@@ -45,27 +45,18 @@ function curl_error
 #
 function response_error
 {
+    local text hint txt
+
     # parse text content from json response body
     text="$( echo "$RESPONSE" | tail -n 1 | jq -r '.text')"
+    hint="$( echo "$RESPONSE" | tail -n 1 | jq -r '.hint')"
 
-    # body="$( echo "$RESPONSE" | tail -n 1 | jq -r .)"
-    # echo -e "$body"
-
-    local txt
-    case "$text" in
-        ( "Path dont exist" )
-            txt+=(
-                "There is no door in that direction"
-                "${NEXT_STEP["info"]}"
-            )
-        ;;
-
-        ( * )
-            txt+=("Something went wrong with the game logic, due to the last command")
-        ;;
-    esac
-
-    txt+=("Print help with '$SCRIPT --help'")
+    txt=(
+        "Something went wrong with the game logic, due to the last command"
+        "text: $text"
+        "hint: $hint"
+        "Print help with '$SCRIPT --help'"
+    )
 
     pretty_print -red "${txt[@]}"
     exit 1
