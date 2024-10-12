@@ -1,12 +1,12 @@
 networks:
-    dbwebb:
+    maze-network:
 
 services:
     server:
         image: lohengrin1337/vlinux-mazeserver:1.0
         container_name: "maze-server"
         networks:
-            dbwebb:
+            maze-network:
         restart:
             "always"
 
@@ -14,7 +14,7 @@ services:
         image: lohengrin1337/vlinux-mazeclient:loop
         container_name: "maze-client"
         networks:
-            dbwebb:
+            maze-network:
         links:
            - server:maze-server
 

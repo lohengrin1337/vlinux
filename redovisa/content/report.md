@@ -64,6 +64,18 @@ Eftersom scriptet växte snabbt valde jag bryta ut koden i moduler. `mazerunner.
 
 Reguljära uttryck har dykt upp lite då och då under utbildningen, men det är inte förrän nu jag börjar på grepp om det. Det finns en hel del mer att lära, men jag känner att jag kommit över tröskeln för att det ska kännas kul och hyfsat bekvämt.
 
+
 <h2 id="kmom06">kmom06</h2>
+
+Jag tycker *docker compose* verkar vara ett väldigt smidigt sätt att hantera sina *nätverk* och *services* på. I några avseenden kanske man har mer kontroll över options och dylikt om man kör varje kommando manuellt, eller via ett bash script, men det mesta verkar gå att styra i config-filen, eller genom options i kommandot, på ett enkelt sätt. Jag kan se att stora projekt med många nätverk, services med mera drar ännu större fördelar av compose, där dokumentation blir tydligare, och hanteringen blir enkare.
+Docker känns bekvämt tycker jag, och jag kommer säkert ha stor användning för det i framtiden. Till exakt vad vet jag inte ännu.
+
+Jag tror jag har en hyfsat klar bild av begreppen klient och server. Klienten ställer frågor till servern, vilken lyssnar, processar och svarar...
+
+För att kunna återanvända koden på ett bra sätt i spel-loopen i mazerunner, ändrade jag om i funktionerna för respektive spel-kommando, så att de sparar text i en global variabel, som i sin tur skrivs ut vid behov. Tidigare gjordes utskrifterna direkt i funktionerna. Jag fick även bryta ut några kontroll-funktioner, så att fel i user input och liknande inte automatiskt stänger programmet. Det var en nyttig uppgift att jobba med *refactoring* av sin egen kod, för att märka vikten av att dela upp koden i små flexibla delar.
+
+Det har varit kul att lära sig jobba med `sed` och `awk`. `sed` känns ett steg mer kraftfullt än `grep`, med stöd för *substitution* och möjlighet att editera en fil direkt. `awk` känns i sin tur några steg mer avancerat än `sed`, med stöd för en mängd olika saker, som ett eget litet programmeringsspråk. Det känns skönt att lära sig olika verkyg som gör linux-miljön enklare.
+
+
 
 <h2 id="kmom10">kmom10</h2>
