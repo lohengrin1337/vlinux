@@ -77,5 +77,5 @@ För att kunna återanvända koden på ett bra sätt i spel-loopen i mazerunner,
 Det har varit kul att lära sig jobba med `sed` och `awk`. `sed` känns ett steg mer kraftfullt än `grep`, med stöd för *substitution* och möjlighet att editera en fil direkt. `awk` känns i sin tur några steg mer avancerat än `sed`, med stöd för en mängd olika saker, som ett eget litet programmeringsspråk. Det känns skönt att lära sig olika verkyg som gör linux-miljön enklare.
 
 
-
 <h2 id="kmom10">kmom10</h2>
+
