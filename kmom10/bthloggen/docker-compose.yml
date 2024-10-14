@@ -1,0 +1,16 @@
+networks:
+  bthloggen:
+
+services:
+  server:
+    image: log-server
+    container_name: "log-server"
+    networks:
+      bthloggen:
+    restart:
+      "always"
+    ports:
+      - 8080:8000
+    volumes:
+      - ./data:/server/app/data
+      - ./server/app/main.py:/server/app/main.py
