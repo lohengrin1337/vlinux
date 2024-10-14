@@ -9,7 +9,7 @@
 #
 function dataToObject(ip, day, month, time, url) {
     if (!firstIteration) {
-        print "\t}," >> outputFile    # closing bracket WITH COMMA for previous object
+        print "\t}," >> outputFile    # closing bracket WITH COMMA for previous object (skip first time)
     }
 
     print "\t{"                                 >> outputFile # opening bracket for current object
@@ -24,14 +24,12 @@ function dataToObject(ip, day, month, time, url) {
 # variables and file creation
 #
 BEGIN {
-    # set outputFile from passed variable 'OutputFileName' or default
-    outputFile = "default.json"
-    if (OutputFileName) {
-        outputFile = OutputFileName
-    }
+    # set outputFile from passed variable 'OutputFileName', else default
+    outputFile = OutputFileName ? OutputFileName : "default.json"
 
-    # capture matching ip, day, month, time and url
-    regex = "^([0-9.]+).*([0-9]{2})/([[:alpha:]]+)/[0-9]{4}:([0-9]{2}:[0-9]{2}:[0-9]{2}).*(https?://(www[.])?[[:alnum:].]+).*$"
+    # capture matching ip, day, month, time and url (case-insensitive), from each line of log-file
+    regex = "^([0-9.]+).*([0-9]{2})/([[:alpha:]]+)/[0-9]{4}:([0-9]{2}:[0-9]{2}:[0-9]{2}).*(https?://(www[.])?[[:alnum:].]+)"
+    IGNORECASE = 1
 
     firstIteration = 1                # true until first iteration is done
 
@@ -49,13 +47,13 @@ BEGIN {
         month = matches[3]
         time = matches[4]
         url = matches[5]
-    }
 
-    # write data to json object
-    dataToObject(ip, day, month, time, url)
+        # write data to json object
+        dataToObject(ip, day, month, time, url)
 
-    if (firstIteration) {
-        firstIteration = 0          # first iteration is done
+        if (firstIteration) {
+            firstIteration = 0          # first iteration is done
+        }
     }
 }
 
