@@ -13,5 +13,6 @@ services:
       - "8080:8000"
     volumes:
       - ./data:/server/app/data
+      - ./server/app/src/log_handler.py:/server/app/src/log_handler.py
       - ./server/app/main.py:/server/app/main.py
     command: ["fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]

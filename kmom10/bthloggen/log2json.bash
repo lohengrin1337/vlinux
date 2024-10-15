@@ -24,8 +24,8 @@
 ### ]
 ###
 
-# LOG_FILE="small.log"
-LOG_FILE="access-50k.log"
+LOG_FILE="small.log"
+# LOG_FILE="access-50k.log"
 AWK_SCRIPT="2json.awk"
 DESTINATION="data/log.json"
 

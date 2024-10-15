@@ -6,6 +6,7 @@
 
 from typing import Union
 from fastapi import FastAPI
+from src.log_handler import LogHandler
 
 app = FastAPI()
 
@@ -25,19 +26,22 @@ def get_doc():
 
 
 @app.get("/data")
-def get_data(
+async def get_data(
     ip: Union[str, None] = None,
     url: Union[str, None] = None,
     month: Union[str, None] = None,
     day: Union[str, None] = None,
     time: Union[str, None] = None,
 ):
-    res = {
-        "ip": ip,
-        "url": url,
-        "month": month,
-        "day": day,
-        "time": time
-    }
+    handler = LogHandler()
+    res = await handler.get_log()
+
+    # res = {
+    #     "ip": ip,
+    #     "url": url,
+    #     "month": month,
+    #     "day": day,
+    #     "time": time
+    # }
 
     return res
