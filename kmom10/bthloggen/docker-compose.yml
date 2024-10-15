@@ -10,7 +10,8 @@ services:
     restart:
       "always"
     ports:
-      - 8080:8000
+      - "8080:8000"
     volumes:
       - ./data:/server/app/data
       - ./server/app/main.py:/server/app/main.py
+    command: ["fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]
