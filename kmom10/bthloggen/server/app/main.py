@@ -33,8 +33,18 @@ async def get_data(
     day: Union[str, None] = None,
     time: Union[str, None] = None,
 ):
-    handler = LogHandler()
-    res = await handler.get_log()
+    log = LogHandler()
+    # res = await log.all_entries()
+
+    filters = {
+        "ip": ip,
+        "url": url,
+        "month": month,
+        "day": day,
+        "time": time,
+    }
+
+    res = await log.filter_entries(filters)
 
     # res = {
     #     "ip": ip,
