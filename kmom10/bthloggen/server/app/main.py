@@ -13,15 +13,17 @@ app = FastAPI()
 
 @app.get("/")
 def get_doc():
+    """ Get existing routes """
+
     return {
         "/": "Supported paths",
-        "/data": "Show all entries",
-        "/data?ip=<ip>": "Show entries with matching ip-adress",
-        "/data?url=<url>": "Show entries with matching url",
-        "/data?month=<month>": "Show entries with matching month",
-        "/data?day=<day>": "Show entries with matching day",
-        "/data?time=<time>": "Show entries with matching time",
-        "/data?ip=<ip>&url=<url>&month=<month>&day=<day>&time=<time>": "Show entries with any combination of matches",
+        "/data": "Get all entries",
+        "/data?ip=<ip>": "Get entries with matching ip-adress",
+        "/data?url=<url>": "Get entries with matching url",
+        "/data?month=<month>": "Get entries with matching month",
+        "/data?day=<day>": "Get entries with matching day",
+        "/data?time=<time>": "Get entries with matching time",
+        "/data?ip=<ip>&url=<url>&month=<month>&day=<day>&time=<time>": "Get entries with any combination of matches",
     }
 
 
@@ -33,9 +35,12 @@ async def get_data(
     day: Union[str, None] = None,
     time: Union[str, None] = None,
 ):
-    log = LogHandler()
-    # res = await log.all_entries()
+    """ Get entries
+        Optional filters: ip, url, month, day and time """
 
+    log = LogHandler()
+
+    # apply filters from query parameters
     filters = {
         "ip": ip,
         "url": url,
@@ -44,14 +49,7 @@ async def get_data(
         "time": time,
     }
 
+    # use handler to get and filter entries
     res = await log.filter_entries(filters)
-
-    # res = {
-    #     "ip": ip,
-    #     "url": url,
-    #     "month": month,
-    #     "day": day,
-    #     "time": time
-    # }
 
     return res
