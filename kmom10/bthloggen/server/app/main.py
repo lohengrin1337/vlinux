@@ -16,16 +16,16 @@ app = FastAPI()
 def get_doc():
     """ Get existing routes """
 
-    return {
+    return [{
         "/": "Supported paths",
         "/data": "Get all entries",
-        "/data?ip=<ip>": "Get entries with matching ip-adress",
-        "/data?url=<url>": "Get entries with matching url",
-        "/data?month=<month>": "Get entries with matching month",
-        "/data?day=<day>": "Get entries with matching day",
-        "/data?time=<time>": "Get entries with matching time",
-        "/data?ip=<ip>&url=<url>&month=<month>&day=<day>&time=<time>": "Get entries with any combination of matches",
-    }
+        "/data?ip=<ip>": "Filter entries on ip-adress (substring, case-insensitive)",
+        "/data?url=<url>": "Filter entries on url (substring, case-insensitive)",
+        "/data?month=<month>": "Filter entries on month (case-insensitive)",
+        "/data?day=<day>": "Filter entries on day (leading zero)",
+        "/data?time=<time>": "Filter entries on time ('hh' or 'hh:mm' or 'hh:mm:ss')",
+        "/data?ip=<ip>&url=<url>&month=<month>&day=<day>&time=<time>": "Filters can be used in any combination"
+    }]
 
 
 

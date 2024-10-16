@@ -3,16 +3,27 @@ networks:
 
 services:
   server:
-    image: log-server
+    image: log-server                                                                   # DEV
     container_name: "log-server"
     networks:
-      bthloggen:
+      - bthloggen
     restart:
       "always"
     ports:
-      - "8080:8000"
+      - "8080:8000"                                                                     # DEV
     volumes:
       - ./data:/server/app/data
-      - ./server/app/src/log_handler.py:/server/app/src/log_handler.py
-      - ./server/app/main.py:/server/app/main.py
-    command: ["fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]
+      - ./server/app/src/log_handler.py:/server/app/src/log_handler.py                  # DEV
+      - ./server/app/main.py:/server/app/main.py                                        # DEV
+    command: ["fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]   # DEV
+
+  client:
+    image: log-client                                                                   # DEV
+    container_name: "log-client"
+    networks:
+      - bthloggen
+    links:
+      - server:log-server
+    volumes:
+      - ./client/bthloggen.bash:/client/bthloggen.bash                                  # DEV
+      - ./client/src:/client/src                                                        # DEV
