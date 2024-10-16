@@ -11,6 +11,7 @@ from src.log_handler import LogHandler
 app = FastAPI()
 
 
+
 @app.get("/")
 def get_doc():
     """ Get existing routes """
@@ -27,6 +28,7 @@ def get_doc():
     }
 
 
+
 @app.get("/data")
 async def get_data(
     ip: Union[str, None] = None,
@@ -38,15 +40,18 @@ async def get_data(
     """ Get entries
         Optional filters: ip, url, month, day and time """
 
+    print("*** NEW '/data' REQUEST ***")
+
     log = LogHandler()
 
     # apply filters from query parameters
+    # order is relevant for speed of process of the actual log file
     filters = {
         "ip": ip,
+        "time": time,
+        "day": day,
         "url": url,
         "month": month,
-        "day": day,
-        "time": time,
     }
 
     # use handler to get and filter entries

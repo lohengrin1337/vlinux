@@ -44,9 +44,9 @@ BEGIN {
     if (match($0, regex, matches)) {
         ip = matches[1]
         day = matches[2]
-        month = matches[3]
+        month = tolower(matches[3]) # lower case
         time = matches[4]
-        url = matches[5]
+        url = tolower(matches[5])   # lower case
 
         # write data to json object
         dataToObject(ip, day, month, time, url)

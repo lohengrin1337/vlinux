@@ -22,10 +22,11 @@ class LogHandler():
 
 
     async def fetch_log(self):
-        """ Fetch_log and parse json-log to self._log (dict) """
+        """ Fetch_log and parse json-log to self._log
+            List of dicts [{'ip': '11.11.1111', 'day': ...}, {}...] """
         with open(self._file_path, "r") as file:
-            # parse to list of dicts [{'ip': '11.11.1111, 'day': ...}, {}...']
             self._log = json.load(file)
+            print("*** LOG WAS FETCHED ***")
 
 
 
@@ -34,6 +35,7 @@ class LogHandler():
         if not self._log:
             await self.fetch_log()
 
+        # print count to server log
         count = len(self._log)
         print(f"all entries: {count}")
 
@@ -50,6 +52,7 @@ class LogHandler():
                 f_val_lower = f_val.lower()
                 result = list(filter(lambda entry: self.filter_by(entry, f_key, f_val_lower), result))
 
+                # print count to server log
                 count = len(result)
                 print(f"{f_key}: {count}")
 
@@ -71,29 +74,36 @@ class LogHandler():
 
     def val_in_data(self, value: str, data: str):
         """ check if data (ip/url) has value in it (case-insensitive) """
-        return value in data.lower()
+        return value in data
 
 
 
     def val_is_data(self, value: str, data: str):
         """ check if value matches data (month/day) (case-insensitive) """
-        return value == data.lower()
+        return value == data
 
 
 
     def val_in_time(self, value: str, time: str):
-        """ Check if value matches time 
+        """ Check if value (time query) matches time (time of entry)
             one unit at a time
             hours, minutes, seconds """
-        time_list = time.split(":")     # '12:13:14' -> ['12', '13', '14']
-        value_list = value.split(":")   # '12' -> ['12'] and '12:13:14' -> ['12', '13', '14']
+        # log entry (time: '12:13:14' -> ['12', '13', '14'])
+        time_list = time.split(":")
+        time_length = len(time_list)
 
-        flag = False
+        # time query (time= '12' -> ['12'] or '12:13:14' -> ['12', '13', '14'])
+        value_list = value.split(":")
+        value_length = len(value_list)
+
+        flag = True
         i = 0
 
-        # iterate over each existing unit of the time parameter
-        for unit in value_list:
-            flag = True if unit == time_list[i] else False
+        # iterate until a query unit is not matching, or
+        #         until the value_list is done, or
+        #         until the time_list is done
+        while flag and value_length > i and time_length > i:
+            flag = True if value_list[i] == time_list[i] else False
             i += 1
 
         return flag
