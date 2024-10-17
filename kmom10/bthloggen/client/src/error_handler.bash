@@ -29,9 +29,15 @@ function badUsage
 #
 function curl_error
 {
+    # local txt=(
+    #     "Curl failed when requesting '$1'"
+    #     "Message from curl: $RESPONSE"
+    # )
+
+
     local txt=(
         "Curl failed when requesting '$1'"
-        "Message from curl: $RESPONSE"
+        "Message from curl: $(cat "$RESPONSE_TEMP")"
     )
 
     pretty_print -red "${txt[@]}"
@@ -45,18 +51,35 @@ function curl_error
 #
 function response_error
 {
-    local text hint txt
+    local code url detail txt
 
-    # parse text content from json response body
-    text="$( echo "$RESPONSE" | tail -n 1 | jq -r '.text')"
-    hint="$( echo "$RESPONSE" | tail -n 1 | jq -r '.hint')"
+    url="$1"
 
-    txt=(
-        "Something went wrong with the game logic, due to the last command"
-        "text: $text"
-        "hint: $hint"
-        "Print help with '$SCRIPT --help'"
-    )
+    # parse code from header, and detail from body
+    # code="$(head -n 1 <<<"$RESPONSE" | grep -Eo "[0-9]{3}")"
+    # detail="$( tail -n 1 <<<"$RESPONSE" | jq -r '.detail')"
+
+    code="$(head -n 1 "$RESPONSE_TEMP" | grep -Eo "[0-9]{3}")"
+    detail="$( tail -n 1 "$RESPONSE_TEMP" | jq -r '.detail')"
+
+    case "$detail" in
+        ( "Not Found" )
+            txt+=(
+                "Log-server: Page Not Found"
+                "Requested resource: '$url'"
+            )
+        ;;
+
+        ( * )
+            txt+=(
+                "Something went wrong!"
+                "Log-server: Response code: $code"
+                "Log-server: Detail: $detail"
+                "Requested resource: '$url'"
+            )
+    esac
+
+    txt+=("Print help with '$SCRIPT --help'")
 
     pretty_print -red "${txt[@]}"
     exit 1

@@ -21,8 +21,13 @@ export GREEN="\033[0;32m"
 export RED="\033[0;31m"
 export NO_COLOR="\033[0m"
 
-# response from log-server set by 'request_log_server'
-export RESPONSE
+# # response from log-server set by 'request_log_server'
+# export RESPONSE
+
+# create temp file to store large response, and clean up with 'trap' when script exits
+temp_file=$(mktemp)
+export RESPONSE_TEMP="$temp_file"
+trap 'rm -f "$RESPONSE_TEMP"' EXIT
 
 # array with text strings to print with pretty_print
 declare -a PRETTY_PRINT

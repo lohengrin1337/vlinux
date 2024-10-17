@@ -8,22 +8,29 @@
 
 #
 # request log-server at specified route
-# curl options: silent mode, include error from curl
+# curl options: include header, silent mode, include error from curl
 #
 function request_log_server
 {
     route="$1"
     url="${BASE_URL}${route}"
 
-    # # request server, save response, and handle possible error from curl
-    # if ! RESPONSE="$(curl -isS "$url" 2>&1)"; then
-    #     curl_error "$url"
-    # fi
+    echo -e "\n*** requesting $url ***\n"
 
     # request server, save response, and handle possible error from curl
-    if ! RESPONSE="$(curl -sS "$url" 2>&1)"; then
+    if ! curl -isS "$url" &> "$RESPONSE_TEMP"; then
         curl_error "$url"
     fi
 
-    export RESPONSE
+    # echo -e "\n*** RESPONSE_TEMP:\n$(cat "$RESPONSE_TEMP")\n***\n"
+
+    # check response is OK
+    if ! response_is_ok; then
+        response_error "$url"
+    fi
+
+    echo -e "\n*** Response = OK ***\n"
+
+    # remove header from response, leave json body (last line)
+    sed -i '$!d' "$RESPONSE_TEMP"
 }

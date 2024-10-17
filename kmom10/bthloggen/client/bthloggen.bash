@@ -16,11 +16,14 @@ source "src/variables.bash"
 # source print- and parse functions
 source "src/utils.bash"
 
-# source function for log-server requests
-source "src/request.bash"
-
 # source functions for error handling
 source "src/error_handler.bash"
+
+# source verifying functions
+source "src/verifiers.bash"
+
+# source function for log-server requests
+source "src/request.bash"
 
 # source core functions
 source "src/core.bash"
@@ -52,13 +55,13 @@ function main
             ;;
 
             ( test )
-                request_log_server "/data?time=15:15"
+
+                request_log_server "/dataasdsa"
                 # request_log_server "/"
 
-                # RESPONSE='[{"ip":"3.173.201.120","day":"15","month":"aug","time":"15:15:15","url":"https://dbwebb.se"}]'
-
-                pretty_jq=$( echo "$RESPONSE" | jq -r . )
-                echo "$pretty_jq"
+                pretty_jq=$( jq -r . "$RESPONSE_TEMP")
+                head="$(head <<<"$pretty_jq")"
+                echo "$head"
                 exit 0
             ;;
 
