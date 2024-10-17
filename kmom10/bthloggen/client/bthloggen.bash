@@ -6,9 +6,9 @@
 ## Author: Olof Jönsson - oljn22
 ##
 
-# source .custom_host if exists (contains global CUSTOM_HOST=<name set with command 'use'>)
+# source client.conf if exists (contains global CUSTOM_HOST=<name set with command 'use'>)
 # shellcheck disable=SC1091
-[[ -f ".custom_host" ]] && source ".custom_host"
+[[ -f "client.conf" ]] && source "client.conf"
 
 # source global variables
 source "src/variables.bash"
@@ -47,7 +47,7 @@ function main
                 exit 0
             ;;
 
-            ( url | view | use )
+            ( use | url | view )
                 command=$1
                 shift
                 app_"$command" "$@"     # run app_function with remaining args
@@ -56,7 +56,7 @@ function main
 
             ( test )
 
-                request_log_server "/dataasdsa"
+                request_log_server "/data"
                 # request_log_server "/"
 
                 pretty_jq=$( jq -r . "$RESPONSE_TEMP")

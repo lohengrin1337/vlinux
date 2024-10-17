@@ -1,8 +1,26 @@
 #!/usr/bin/env bash
 
 ##
-## Core functions for mazerunner cli
+## Core functions for log client
 ##
+
+
+
+#
+# set hostname of server to use
+#
+function app_use
+{
+    local host_name="$1"
+
+    echo -e "CUSTOM_HOST=\"$host_name\"" >> "$CONFIG_FILE"
+}
+
+
+
+#
+# show the url to use
+#
 
 
 

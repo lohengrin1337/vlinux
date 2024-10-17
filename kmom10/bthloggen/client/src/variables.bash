@@ -11,6 +11,9 @@ export SCRIPT="$name"
 # Current version
 export VERSION="1.0.0"
 
+# name of the config file
+export CONFIG_FILE="client.conf"
+
 # host and port of log-server
 export HOST="${CUSTOM_HOST:-log-server}"
 export PORT="8000"
