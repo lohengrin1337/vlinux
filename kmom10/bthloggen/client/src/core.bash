@@ -14,14 +14,36 @@ function app_use
     local host_name="$1"
 
     echo -e "CUSTOM_HOST=\"$host_name\"" >> "$CONFIG_FILE"
+
+    pretty_print "You are using '$host_name' as server host"
 }
 
 
 
 #
-# show the url to use
+# show the url to access the log-server from browser
 #
+function app_url
+{
+    pretty_print "URL to access log-server from browser:" "$PUBLIC_URL"
+}
 
+
+
+#
+# list entries, with or without filters (ip, url, month, day, time)
+#
+function app_view
+{
+    # build a query string (filters) from the arguments
+    build_query "$@"
+
+    # request 'log-server/data' with the query
+    request_log_server "/data${QUERY_STRING}"
+
+    # print entries
+    pretty_print -json
+}
 
 
 #

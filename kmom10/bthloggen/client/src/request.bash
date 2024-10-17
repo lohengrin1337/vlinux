@@ -33,4 +33,9 @@ function request_log_server
 
     # remove header from response, leave json body (last line)
     sed -i '$!d' "$RESPONSE_TEMP"
+
+    # convert one-line json string to valid formated json
+    temp=$(mktemp)
+    jq -r . "$RESPONSE_TEMP" > "$temp"
+    mv "$temp" "$RESPONSE_TEMP"
 }

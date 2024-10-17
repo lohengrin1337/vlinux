@@ -48,7 +48,7 @@ function main
             ;;
 
             ( use | url | view )
-                command=$1
+                command="$1"
                 shift
                 app_"$command" "$@"     # run app_function with remaining args
                 exit 0
@@ -56,12 +56,11 @@ function main
 
             ( test )
 
-                request_log_server "/data"
-                # request_log_server "/"
+                # request_log_server "/data"
+                request_log_server "/"
 
-                pretty_jq=$( jq -r . "$RESPONSE_TEMP")
-                head="$(head <<<"$pretty_jq")"
-                echo "$head"
+                cat $RESPONSE_TEMP
+
                 exit 0
             ;;
 
