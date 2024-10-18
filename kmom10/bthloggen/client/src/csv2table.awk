@@ -9,12 +9,12 @@ BEGIN {
     FS = ","
 
     COLS = 5
-    HEADER_FORMAT = "\n    " multiplyStr("%20s", COLS) "\n"
-    DATA_FORMAT = "    " multiplyStr("%20s", COLS) "\n"
-    LINE = multiplyStr("-", 20 * COLS) "----"
+    HEADER_FORMAT = "\t%-23s%-21s%s\n"
+    DATA_FORMAT = "\t%-2s%-4s%-16s%-21s%s\n"
+    LINE = multiplyStr("-", 81) "----"
 
     # print header
-    printf(HEADER_FORMAT, "IP", "URL", "MONTH", "DAY", "TIME")
+    printf(HEADER_FORMAT, "DATETIME","IP", "URL")
     print(LINE)
 }
 

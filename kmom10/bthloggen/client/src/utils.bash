@@ -7,7 +7,26 @@
 
 
 #
-# print each argument with frame, color and spacing
+# multiply a string n times
+#
+function multiply_str
+{
+    local str n res
+    str="$1"
+    n=$2
+    res=""
+
+    for ((i = 0; i < n; i++)) {
+        res="$res$str"
+    }
+
+    export MULTIPLIED_STR="$res"
+}
+
+
+
+#
+# print each argument with frame, color and spacing, or print a table from file
 #
 function pretty_print
 {
@@ -19,8 +38,10 @@ function pretty_print
     table="false"
     [[ $1 = "-table" ]] && table="true" && shift
 
-    top="$color====================================================================================$NO_COLOR\n"
-    bottom="$color====================================================================================$NO_COLOR"
+    multiply_str "=" 85
+
+    top="$color$MULTIPLIED_STR$NO_COLOR\n"
+    bottom="$color$MULTIPLIED_STR$NO_COLOR"
 
     if [[ $table = "false" ]]; then
         echo -e "$top"
@@ -29,6 +50,7 @@ function pretty_print
     else
         file_to_print="$1"
         echo -e "$top"
+        echo -e "$color\t\t\t      <<< MATCHING ENTRIES >>>$NO_COLOR\n"
         cat "$file_to_print"
         echo -e "\n$bottom"
     fi
@@ -115,7 +137,7 @@ function count_entries
 function entries2csv
 {
     temp=$(mktemp)
-    jq -r '.[] | "\(.ip), \(.url), \(.month), \(.day), \(.time)"' "$RESPONSE_TEMP" > "$temp"
+    jq -r '.[] | "\(.day), \(.month), \(.time), \(.ip), \(.url)"' "$RESPONSE_TEMP" > "$temp"
     mv "$temp" "$RESPONSE_TEMP"
 }
 

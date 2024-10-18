@@ -38,6 +38,9 @@ trap 'rm -f "$RESPONSE_TEMP"' EXIT
 # count of entries
 export COUNT
 
+# multiplied string set by 'multiply_str'
+export MULTIPLIED_STR
+
 # array with text strings to print with pretty_print
 declare -a PRETTY_PRINT
 export PRETTY_PRINT
