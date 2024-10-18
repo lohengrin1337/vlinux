@@ -41,8 +41,14 @@ function app_view
     # request 'log-server/data' with the query
     request_log_server "/data${QUERY_STRING}"
 
-    # print entries
-    pretty_print -json
+    # convert json response to csv with jq
+    entries2csv
+
+    # convert csv to formated table with awk
+    csv2table
+
+    # print table
+    pretty_print -table $RESPONSE_TEMP
 }
 
 

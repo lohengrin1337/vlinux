@@ -11,25 +11,25 @@
 #
 function pretty_print
 {
-    local color top bottom json
+    local color top bottom table file_to_print
 
     color="$GREEN"
     [[ $1 = "-red" ]] && color="$RED" && shift
 
-    json="false"
-    [[ $1 = "-json" ]] && json="true" && shift
+    table="false"
+    [[ $1 = "-table" ]] && table="true" && shift
 
     top="$color====================================================================================$NO_COLOR\n"
     bottom="$color====================================================================================$NO_COLOR"
 
-    if [[ $json = "false" ]]; then
+    if [[ $table = "false" ]]; then
         echo -e "$top"
         printf "    %s\n\n" "$@"
         echo -e "$bottom"
     else
+        file_to_print="$1"
         echo -e "$top"
-        echo -e "    Matching entries:\n"
-        cat $RESPONSE_TEMP
+        cat "$file_to_print"
         echo -e "\n$bottom"
     fi
 }
@@ -94,4 +94,54 @@ function build_query
     done
 
     export QUERY_STRING="$query"
+}
+
+
+
+#
+# count entries with jq
+#
+function count_entries
+{
+    COUNT="$(jq '. | length' "$RESPONSE_TEMP")"
+    export COUNT
+}
+
+
+
+#
+# convert entries to csv (without header) ip, url, month, day, time
+#
+function entries2csv
+{
+    temp=$(mktemp)
+    jq -r '.[] | "\(.ip), \(.url), \(.month), \(.day), \(.time)"' "$RESPONSE_TEMP" > "$temp"
+    mv "$temp" "$RESPONSE_TEMP"
+}
+
+
+
+#
+# convert csv to printable table format
+#
+function csv2table
+{
+    awk_script="src/csv2table.awk"
+    input_file="$RESPONSE_TEMP"
+
+    temp=$(mktemp)
+    awk -f $awk_script $input_file > $temp
+    mv $temp $RESPONSE_TEMP
+}
+
+
+
+#
+# convert one-line json string to valid formated json
+#
+function entries2json
+{
+    temp=$(mktemp)
+    jq -r . "$RESPONSE_TEMP" > "$temp"
+    mv "$temp" "$RESPONSE_TEMP"
 }
