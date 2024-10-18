@@ -38,6 +38,9 @@ trap 'rm -f "$RESPONSE_TEMP"' EXIT
 # count of entries
 export COUNT
 
+# filters set by 'stringify_filters'
+export FILTERS
+
 # multiplied string set by 'multiply_str'
 export MULTIPLIED_STR
 

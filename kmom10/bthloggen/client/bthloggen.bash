@@ -47,6 +47,14 @@ function main
                 exit 0
             ;;
 
+            ( --count | -c )
+                shift
+                [[ $1 != "view" ]] && badUsage "$*"
+                shift
+                app_count_view "$@"
+                exit 0
+            ;;
+
             ( use | url | view )
                 command="$1"
                 shift

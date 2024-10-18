@@ -30,29 +30,32 @@ function multiply_str
 #
 function pretty_print
 {
-    local color top bottom table file_to_print
+    local color top bottom header table file_to_print
 
     color="$GREEN"
     [[ $1 = "-red" ]] && color="$RED" && shift
+
+    header="false"
+    [[ $1 = "-header" ]] && header="true" && shift
 
     table="false"
     [[ $1 = "-table" ]] && table="true" && shift
 
     multiply_str "=" 85
 
-    top="$color$MULTIPLIED_STR$NO_COLOR\n"
-    bottom="$color$MULTIPLIED_STR$NO_COLOR"
+    top="${color}${MULTIPLIED_STR}${NO_COLOR}\n"
+    bottom="${color}${MULTIPLIED_STR}${NO_COLOR}"
 
-    if [[ $table = "false" ]]; then
-        echo -e "$top"
-        printf "    %s\n\n" "$@"
-        echo -e "$bottom"
-    else
+    echo -e "$top"
+    [[ $header = "true" ]] && echo -e "${color}${1}${NO_COLOR}\n" && shift
+
+    if [[ $table = "true" ]]; then
         file_to_print="$1"
-        echo -e "$top"
-        echo -e "$color\t\t\t      <<< MATCHING ENTRIES >>>$NO_COLOR\n"
         cat "$file_to_print"
         echo -e "\n$bottom"
+    else
+        printf "\t%s\n\n" "$@"
+        echo -e "$bottom"
     fi
 }
 
@@ -64,7 +67,7 @@ function pretty_print
 function usage
 {
     local txt=(
-        "<<< LOG CLIENT >>>"
+        "<<< HELP >>>"
         "Usage: $0 [options] <command> [arguments]"
         "Tip: You can use multiple filters with view ( e.g. 'view ip <ip> url <url> time <time>')"
         ""
@@ -84,7 +87,7 @@ function usage
         "   --count, -c             Show the count of matching entries (e.g. '-c view url <url>')"
     )
 
-    pretty_print "${txt[@]}"
+    pretty_print -header "${txt[@]}"
 }
 
 
@@ -94,7 +97,7 @@ function usage
 #
 function version
 {
-    pretty_print "$SCRIPT version $VERSION"
+    pretty_print -header "<<< VERSION >>>" "$SCRIPT version $VERSION"
 }
 
 
@@ -166,4 +169,26 @@ function entries2json
     temp=$(mktemp)
     jq -r . "$RESPONSE_TEMP" > "$temp"
     mv "$temp" "$RESPONSE_TEMP"
+}
+
+
+
+#
+# stringify filter arguments (url www.xxx.xx ip 555 => "url:www.xxx.xx, ip:555")
+#
+function stringify_filters
+{
+    local filters
+
+    while (( $# )); do
+        filters+="$1: '$2', "
+        shift
+        shift
+    done
+
+    filters=${filters%, }
+
+    [[ -z $filters ]] && filters="no filters"
+
+    export FILTERS="$filters"
 }

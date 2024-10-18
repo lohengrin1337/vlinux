@@ -15,7 +15,7 @@ function request_log_server
     route="$1"
     url="${BASE_URL}${route}"
 
-    echo -e "\n*** requesting $url ***\n"
+    # echo -e "\n*** requesting $url ***\n"
 
     # request server, save response, and handle possible error from curl
     if ! curl -isS "$url" &> "$RESPONSE_TEMP"; then
@@ -29,7 +29,7 @@ function request_log_server
         response_error "$url"
     fi
 
-    echo -e "\n*** Response = OK ***\n"
+    # echo -e "\n*** Response = OK ***\n"
 
     # remove header from response, leave json body (last line)
     sed -i '$!d' "$RESPONSE_TEMP"

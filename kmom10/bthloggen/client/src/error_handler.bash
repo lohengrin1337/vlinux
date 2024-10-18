@@ -15,7 +15,7 @@ function badUsage
     local txt=(
         "$message"
         "For an overview of the commands, execute:"
-        "$SCRIPT --help"
+        "$0 --help"
     )
 
     pretty_print -red "${txt[@]}"
