@@ -18,6 +18,7 @@ def get_doc():
 
     return [{
         "/": "Supported paths",
+        "/filters": "Get list of valid filters",
         "/data": "Get all entries",
         "/data?ip=<ip>": "Filter entries on ip-adress (substring, case-insensitive)",
         "/data?url=<url>": "Filter entries on url (substring, case-insensitive)",
@@ -26,6 +27,13 @@ def get_doc():
         "/data?time=<time>": "Filter entries on time ('hh' or 'hh:mm' or 'hh:mm:ss')",
         "/data?ip=<ip>&url=<url>&month=<month>&day=<day>&time=<time>": "Filters can be used in any combination"
     }]
+
+
+
+@app.get("/filters")
+def get_filters():
+    """ Get list of valid filters """
+    return ["ip","url","month","day","time"]
 
 
 

@@ -29,7 +29,7 @@ END {
 
 
 #
-# multiply a string n times
+# util, multiply a string n times
 #
 function multiplyStr(str, n) {
     res=""

@@ -1,27 +1,8 @@
 #!/usr/bin/env bash
 
 ##
-## Print- and parsing functions for mazerunner cli
+## Print- and parsing functions for log client
 ##
-
-
-
-#
-# multiply a string n times
-#
-function multiply_str
-{
-    local str n res
-    str="$1"
-    n=$2
-    res=""
-
-    for ((i = 0; i < n; i++)) {
-        res="$res$str"
-    }
-
-    export MULTIPLIED_STR="$res"
-}
 
 
 
@@ -62,56 +43,47 @@ function pretty_print
 
 
 #
-# Message to display for usage and help.
+# multiply a string n times
 #
-function usage
+function multiply_str
 {
-    local txt=(
-        "<<< HELP >>>"
-        "Usage: $0 [options] <command> [arguments]"
-        "Tip: You can use multiple filters with view ( e.g. 'view ip <ip> url <url> time <time>')"
-        ""
-        "Commands:"
-        "   use <server>            Set hostname of server to use ('log-server', 'localhost' etc)"
-        "   url                     Show url for browser access"
-        "   view                    List all entries"
-        "   view ip <ip>            Filter entries on ip (substring, case-insensitive)"
-        "   view url <url>          Filter entries on url (substring, case-insensitive)"
-        "   view month <month>      Filter entries on month (case-insensitive)"
-        "   view day <day>          Filter entries on day (leading zero)"
-        "   view time <time>        Filter entries on time ('hh' or 'hh:mm' or 'hh:mm:ss')"
-        ""
-        "Options:"
-        "   --help, -h              Show help"
-        "   --version, -v           Show version"
-        "   --count, -c             Show the count of matching entries (e.g. '-c view url <url>')"
-    )
+    local str n res
+    str="$1"
+    n=$2
+    res=""
 
-    pretty_print -header "${txt[@]}"
+    for ((i = 0; i < n; i++)) {
+        res="$res$str"
+    }
+
+    export MULTIPLIED_STR="$res"
 }
 
 
 
 #
-# print version
+# handle filters for view
+# verify, build query, build pretty string
 #
-function version
+function handle_filters
 {
-    pretty_print -header "<<< VERSION >>>" "$SCRIPT version $VERSION"
+    verify_filters "$@"
+    build_query "$@"
+    stringify_filters "$@"
 }
 
 
 
 #
-# build query string from commmand line arguments (ip 555 -> ip=555 etc)
+# build query string from commmand line arguments (ip 555 day 15 => "?ip=555&day=15")
 #
 function build_query
 {
     local query=""
 
     while (( $# )); do
-        [[ ${#query} = 0 ]] && query+="?"
-        [[ ${#query} > 1 ]] && query+="&"
+        [[ ${#query} -eq 0 ]] && query+="?"
+        [[ ${#query} -gt 1 ]] && query+="&"
         query+="$1="
         shift
         query+="$1"
@@ -119,6 +91,29 @@ function build_query
     done
 
     export QUERY_STRING="$query"
+}
+
+
+
+#
+# stringify filter arguments (url www.xxx.xx ip 555 => "url:www.xxx.xx, ip:555")
+#
+function stringify_filters
+{
+    local filters
+
+    while (( $# )); do
+        filters+="$1: '$2', "
+        shift
+        shift
+    done
+
+    # remove trailing ', '
+    filters=${filters%, }
+
+    [[ -z $filters ]] && filters="no filters"
+
+    export FILTERS="$filters"
 }
 
 
@@ -133,9 +128,23 @@ function count_entries
 }
 
 
+#
+# convert json response to formated table
+#
+function entries2table
+{
+    # json to csv with jq (modify $RESPONSE_TEMP)
+    entries2csv
+
+    # csv to formated table with awk (modify $RESPONSE_TEMP)
+    csv2table
+}
+
+
+
 
 #
-# convert entries to csv (without header) ip, url, month, day, time
+# convert entries to csv (without header) day, month, time, ip, url
 #
 function entries2csv
 {
@@ -155,40 +164,6 @@ function csv2table
     input_file="$RESPONSE_TEMP"
 
     temp=$(mktemp)
-    awk -f $awk_script $input_file > $temp
-    mv $temp $RESPONSE_TEMP
-}
-
-
-
-#
-# convert one-line json string to valid formated json
-#
-function entries2json
-{
-    temp=$(mktemp)
-    jq -r . "$RESPONSE_TEMP" > "$temp"
+    awk -f "$awk_script" "$input_file" > "$temp"
     mv "$temp" "$RESPONSE_TEMP"
-}
-
-
-
-#
-# stringify filter arguments (url www.xxx.xx ip 555 => "url:www.xxx.xx, ip:555")
-#
-function stringify_filters
-{
-    local filters
-
-    while (( $# )); do
-        filters+="$1: '$2', "
-        shift
-        shift
-    done
-
-    filters=${filters%, }
-
-    [[ -z $filters ]] && filters="no filters"
-
-    export FILTERS="$filters"
 }

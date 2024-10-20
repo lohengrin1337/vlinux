@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ##
-## Global variables for bthloggen client
+## Global variables for log client
 ##
 
 # name of the script
@@ -27,6 +27,9 @@ export GREEN="\033[0;32m"
 export RED="\033[0;31m"
 export NO_COLOR="\033[0m"
 
+# list of valid filters (fetched from log-server via 'validate_filters')
+export VALID_FILTERS
+
 # query string set by 'build_query'
 export QUERY_STRING
 
@@ -35,7 +38,7 @@ temp_file=$(mktemp)
 export RESPONSE_TEMP="$temp_file"
 trap 'rm -f "$RESPONSE_TEMP"' EXIT
 
-# count of entries
+# count of entries set by 'count_entries'
 export COUNT
 
 # filters set by 'stringify_filters'
@@ -43,7 +46,3 @@ export FILTERS
 
 # multiplied string set by 'multiply_str'
 export MULTIPLIED_STR
-
-# array with text strings to print with pretty_print
-declare -a PRETTY_PRINT
-export PRETTY_PRINT

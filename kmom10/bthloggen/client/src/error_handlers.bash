@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ##
-## Error handling for mazerunner cli
+## Error handling for log client
 ##
 
 
@@ -29,12 +29,6 @@ function badUsage
 #
 function curl_error
 {
-    # local txt=(
-    #     "Curl failed when requesting '$1'"
-    #     "Message from curl: $RESPONSE"
-    # )
-
-
     local txt=(
         "Curl failed when requesting '$1'"
         "Message from curl: $(cat "$RESPONSE_TEMP")"
@@ -56,9 +50,6 @@ function response_error
     url="$1"
 
     # parse code from header, and detail from body
-    # code="$(head -n 1 <<<"$RESPONSE" | grep -Eo "[0-9]{3}")"
-    # detail="$( tail -n 1 <<<"$RESPONSE" | jq -r '.detail')"
-
     code="$(head -n 1 "$RESPONSE_TEMP" | grep -Eo "[0-9]{3}")"
     detail="$( tail -n 1 "$RESPONSE_TEMP" | jq -r '.detail')"
 

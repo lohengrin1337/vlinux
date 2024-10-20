@@ -35,25 +35,19 @@ function app_url
 #
 function app_view
 {
-    # build a query string (filters) from the arguments
-    build_query "$@"
+    # verify filters, build query, build pretty string
+    handle_filters "$@"
 
-    # request 'log-server/data' with the query
+    # request 'log-server/data' with the query, save valid response body in $RESPONSE_TEMP
     request_log_server "/data${QUERY_STRING}"
 
-    # convert json response to csv with jq
-    entries2csv
-
-    # convert csv to formated table with awk
-    csv2table
-
-    # build pretty version of filters
-    stringify_filters "$@"
+    # convert json response to formated table with jq and awk (modify $RESPONSE_TEMP)
+    entries2table
 
     # print table
     pretty_print -header -table \
         "\t<<< VIEW MATCHING ENTRIES ($FILTERS) >>>" \
-        $RESPONSE_TEMP
+        "$RESPONSE_TEMP"
 }
 
 
@@ -63,22 +57,63 @@ function app_view
 #
 function app_count_view
 {
-    local filters
+    # verify filters, build query, build pretty string
+    handle_filters "$@"
 
-    # build a query string (filters) from the arguments
-    build_query "$@"
-
-    # request 'log-server/data' with the query
+    # request 'log-server/data' with the query, save valid response body in $RESPONSE_TEMP
     request_log_server "/data${QUERY_STRING}"
 
     # count matching entries
     count_entries
 
-    # build pretty version of filters
-    stringify_filters "$@"
-
     # print count
     pretty_print -header \
         "\t<<< COUNT MATCHING ENTRIES ($FILTERS) >>>" \
         "COUNT: $COUNT"
+}
+
+
+
+#
+# print usage and help
+#
+function app_usage
+{
+    local txt=(
+        "\t<<< USAGE AND HELP >>>"
+        "Usage: $0 [options] <command> [arguments]"
+        ""
+        "Options:"
+        "   --help, -h              Show help"
+        "   --version, -v           Show version"
+        "   --count, -c             Show the count of matching entries (e.g. '-c view url <url>')"
+        ""
+        "Commands:"
+        "   use <server>            Set hostname of server to use ('log-server', 'localhost' etc)"
+        "   url                     Show url for browser access"
+        "   view <filter> <value>   List entries"
+        ""
+        "Arguments for 'view':"
+        "   ip <ip>            Filter entries on ip (substring, case-insensitive)"
+        "   url <url>          Filter entries on url (substring, case-insensitive)"
+        "   month <month>      Filter entries on month (case-insensitive)"
+        "   day <day>          Filter entries on day (leading zero)"
+        "   time <time>        Filter entries on time ('hh' or 'hh:mm' or 'hh:mm:ss')"
+        ""
+        "Tip: You can use multiple filters with view ( e.g. 'view ip <ip> url <url> time <time>')"
+    )
+
+    pretty_print -header "${txt[@]}"
+}
+
+
+
+#
+# print version
+#
+function app_version
+{
+    pretty_print -header \
+        "\t<<< VERSION >>>" \
+        "$SCRIPT version $VERSION"
 }

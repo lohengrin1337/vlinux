@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ##
-## Main program of
+## Main module of
 ## Bthloggen client
 ## Author: Olof Jönsson - oljn22
 ##
@@ -17,9 +17,9 @@ source "src/variables.bash"
 source "src/utils.bash"
 
 # source functions for error handling
-source "src/error_handler.bash"
+source "src/error_handlers.bash"
 
-# source verifying functions
+# source functions for error handling
 source "src/verifiers.bash"
 
 # source function for log-server requests
@@ -38,18 +38,19 @@ function main
     while (( $# )); do
         case "$1" in
             ( --help | -h )
-                usage
+                app_usage
                 exit 0
             ;;
 
             ( --version | -v )
-                version
+                app_version
                 exit 0
             ;;
 
             ( --count | -c )
                 shift
-                [[ $1 != "view" ]] && badUsage "$*"
+                [[ $1 != "view" ]] && \
+                    badUsage "$*" "Usage for '--count' option: '$0 --count view <filter> <value>'"
                 shift
                 app_count_view "$@"
                 exit 0
@@ -59,16 +60,6 @@ function main
                 command="$1"
                 shift
                 app_"$command" "$@"     # run app_function with remaining args
-                exit 0
-            ;;
-
-            ( test )
-
-                # request_log_server "/data"
-                request_log_server "/"
-
-                cat $RESPONSE_TEMP
-
                 exit 0
             ;;
 
