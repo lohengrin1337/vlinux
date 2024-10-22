@@ -27,3 +27,31 @@ services:
     volumes:
       - ./client/bthloggen.bash:/client/bthloggen.bash                                  # DEV
       - ./client/src:/client/src                                                        # DEV
+
+  webbclient:
+    # build: ./webbclient
+    image: log-webclient
+    container_name: log-webclient
+    networks:
+      - bthloggen
+    restart:
+      "always"
+    links:
+      - server:log-server
+    ports:
+      - 1338:3000
+    # develop:
+    #   watch:
+    #     - action: sync
+    #       path: ./webbclient/public
+    #       target: /webclient/public
+    #     - action: sync
+    #       path: ./webbclient/views
+    #       target: /webclient/views
+    #     - action: sync+restart
+    #       path: ./webbclient/routes
+    #       target: /webclient/routes
+    volumes:                                                                            # DEV
+      - ./webbclient/public:/webclient/public
+      - ./webbclient/routes:/webclient/routes
+      - ./webbclient/views:/webclient/views

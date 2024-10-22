@@ -1,0 +1,56 @@
+form {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0 0 var(--baseline-x2) 0;
+    gap: var(--baseline-half);
+}
+
+form div {
+    max-width: 140px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+label {
+    width: 100%;
+    font-size: 80%;
+    font-weight: 600;
+    margin-bottom: var(--baseline-quart);
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    font-family: inherit;
+    padding: var(--baseline-quart) var(--baseline-half);
+    border: var(--border-input);
+    border-radius: 5px;
+    background-color: var(--bgcol-input);
+    color: inherit;
+    font-size: inherit;
+    box-shadow: var(--shadow-light-small);
+
+}
+
+div:has(button) {
+    align-self: flex-end;
+}
+
+button {
+    font-family: inherit;
+    padding: var(--baseline-quart) var(--baseline-half);
+    border: var(--border-button);
+    border-radius: 5px;
+    background-color: var(--bgcol-button);
+    color: inherit;
+    font-size: inherit;
+    box-shadow: var(--shadow-light-small);
+}
+
+button:hover {
+    background-color: var(--bgcol-button-hover);
+    cursor: pointer;
+}

@@ -1,0 +1,27 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+
+    title= title
+
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com" crossorigin)
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Josefin+Slab:ital,wght@0,100..700;1,100..700&display=swap")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    header.header
+      span.site-title= title
+      nav.nav
+        ul
+          li
+            a(href="/") home
+          li
+            a(href="/data") log
+
+    main.main
+      block content
+
+    footer.footer
+      p copyright &copy; 2024 olof jönsson (oljn22)

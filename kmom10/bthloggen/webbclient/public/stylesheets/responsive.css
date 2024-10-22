@@ -1,0 +1,46 @@
+@media (max-width: 900px) {
+    header,
+    main,
+    footer {
+        padding-left: var(--baseline);
+        padding-right: var(--baseline);
+    }
+
+    .site-title {
+        font-size: var(--font-size-1-m);
+    }
+
+    .nav a {
+        font-size: var(--font-size-3-m);
+    }
+
+    h1 {
+        font-size: var(--font-size-1-m);
+    }
+
+    h2 {
+        font-size: var(--font-size-3-m);
+    }
+
+    h3 {
+        font-size: var(--font-size-3-m);
+    }
+
+    footer {
+        font-size: var(--font-size-4-m);
+    }
+}
+
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 550px) {
+    .profile-img {
+        float: none;
+        padding: 0;
+        margin-bottom: var(--baseline);
+    }
+}

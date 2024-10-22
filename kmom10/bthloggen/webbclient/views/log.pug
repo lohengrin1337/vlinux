@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    //- pre= JSON.stringify(filters, null, 2)
+
+    form(action="", method="get")
+        div
+            label(for="ip") IP
+            input(type="text", id="ip", name="ip")
+        div
+            label(for="url") URL
+            input(type="text", id="url", name="url")
+        div
+            label(for="month") MONTH
+            input(type="text", id="month", name="month")
+        div
+            label(for="day") DAY
+            input(type="text", id="day", name="day")
+        div
+            label(for="time") TIME
+            input(type="text", id="time", name="time")
+        div
+            button(type="submit") SEARCH
+
+    table
+        thead
+            tr
+                th datetime
+                th ip
+                th url
+        tbody
+            each entry in entries
+                tr
+                    td #{entry.day} #{entry.month} #{entry.time}
+                    td #{entry.ip}
+                    td #{entry.url}

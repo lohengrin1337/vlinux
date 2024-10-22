@@ -1,0 +1,57 @@
+:root {
+    --baseline: 1.4rem;
+    --baseline-x2: 2.8rem;
+    --baseline-x4: 5.6rem;
+    --baseline-half: 0.7rem;
+    --baseline-quart: 0.35rem;
+
+    /* scale for desktop 1.3 - scale for mobile 1.2 */
+    --font-size-1-d: calc(1rem * 1.3 * 1.3 * 1.3 * 1.3);
+    --font-size-2-d: calc(1rem * 1.3 * 1.3 * 1.3);
+    --font-size-3-d: calc(1rem * 1.3 * 1.3);
+    --font-size-4-d: calc(1rem * 1.3);
+    --font-size-1-m: calc(1rem * 1.2 * 1.2 * 1.2 * 1.2);
+    --font-size-2-m: calc(1rem * 1.2 * 1.2 * 1.2);
+    --font-size-3-m: calc(1rem * 1.2 * 1.2);
+    --font-size-4-m: calc(1rem * 1.2);
+
+    --font-main: "Josefin Slab", monospace;
+
+    --white: #fff;
+    --black: #000;
+    --almost-white: #fafaff;
+    --almost-black: #101012;
+    --almost-transparent: rgba(73, 46, 46, 0.05);
+    --grey-dark: #202024;
+    --grey-semi-dark: #323237;
+    --grey: #808080;
+    --yellow: #c7942e;
+    --purple: #081E50;
+    --purple-dark: #021030;
+    --purple-light: #10285F;
+
+    --col-font: var(--almost-white);
+    --bgcol: var(--almost-black);
+    --col-accent: var(--yellow);
+
+    /* table */
+    --col-table-header: var(--white);
+    --bgcol-table-header: var(--purple);
+    --col-table-body: var(--white);
+    --bgcol-table-body-shade-1: var(--grey-dark);
+    --bgcol-table-body-shade-2: var(--grey-semi-dark);
+
+    /* form */
+    --border-input: 1px solid var(--yellow);
+    --bgcol-input: var(--almost-transparent);
+    /* --border-button: 1px solid var(--yellow); */
+    --border-button: 1px solid var(--purple-dark); 
+    --bgcol-button: var(--purple);
+    --bgcol-button-hover: var(--purple-dark);
+    /* --bgcol-button: var(--almost-transparent); */
+    --col-button: var(--white);
+
+    /* shadows */
+    --shadow-light-small: 0px 0px 5px var(--grey-semi-dark);
+    --shadow-light-big: 0px 0px 10px var(--grey-semi-dark);
+}
