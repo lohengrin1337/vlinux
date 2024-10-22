@@ -5,6 +5,7 @@ table {
     margin-bottom: var(--baseline);
     border-collapse: collapse;
     overflow: hidden;
+    margin-bottom: var(--baseline-x2);
 }
 
 

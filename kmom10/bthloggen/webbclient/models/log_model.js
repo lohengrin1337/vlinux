@@ -9,7 +9,7 @@ class logModel {
     #FILTER_ROUTE = "/filters";
     #ENTRY_ROUTE = "/data";
     #baseUrl;
-    #query;
+    #query = ""
 
     constructor(
         host = this.#HOST,
@@ -38,6 +38,15 @@ class logModel {
         } catch (error) {
             console.error("Error fetching log data:", error.message);
         }
+    }
+
+    /**
+     * get current query
+     * 
+     * @return {String}
+     */
+    get query() {
+        return this.#query;
     }
 
     /**

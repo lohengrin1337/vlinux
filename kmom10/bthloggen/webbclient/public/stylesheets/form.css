@@ -48,10 +48,40 @@ button {
     color: inherit;
     font-size: inherit;
     font-weight: 700;
+    text-transform: uppercase;
     box-shadow: var(--shadow-light-small);
 }
 
 button:hover {
     background-color: var(--bgcol-button-hover);
     cursor: pointer;
+}
+
+.form-container {
+    width: 100%;
+    max-width: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-container form {
+    width: fit-content;
+}
+
+.form-container span {
+    align-self: center;
+}
+
+.btn-container {
+    width: 100%;
+    max-width: none;
+    text-align: center;
+}
+
+.form-small {
+    margin-bottom: 0;
+}
+
+.btn-container button {
+    margin: auto;
 }

@@ -9,14 +9,28 @@ router.get('/', function(req, res, next) {
 
 /* GET log page. */
 router.get('/data', async function(req, res, next) {
+    const page = parseInt(req.query.page) || 1;
     const filters = req.query;
     const log = new logModel();
     const entries = await log.getEntries(filters);
-    const count = Object.keys(entries).length;
+    const count = entries.length;
+
+    console.log("*** page: ", page);
+
+    const limit = 100;
+    const start = (page - 1 ) * limit;
+    const end = page * limit;
+    const limitedEntries = entries.slice(start, end);
+
     const data = {
         title: 'bthlog',
-        entries: entries,
-        count: count
+        entries: limitedEntries,
+        count: count,
+        pageCount: Math.ceil(count / limit),
+        hasMore: count > end,
+        nextPage: page + 1,
+        lastFilters: filters
+        // lastQuery: log.query
     };
 
     res.render('log', data);

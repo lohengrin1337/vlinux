@@ -36,3 +36,22 @@ block content
                     td #{entry.day} #{entry.month} #{entry.time}
                     td #{entry.ip}
                     td #{entry.url}
+
+    div.form-container
+        if nextPage > 2
+            form.form-small(action="", method="get")
+                each val, key in lastFilters
+                    input(type="hidden", name=key, value=val)
+                input(type="hidden", name="page", value=nextPage - 2)
+                div.btn-container
+                    button(type="submit") &lt; PREVIOUS
+
+        span PAGE #{nextPage - 1} OF #{pageCount}
+
+        if hasMore
+            form.form-small(action="", method="get")
+                each val, key in lastFilters
+                    input(type="hidden", name=key, value=val)
+                input(type="hidden", name="page", value=nextPage)
+                div.btn-container
+                    button(type="submit") NEXT &gt;

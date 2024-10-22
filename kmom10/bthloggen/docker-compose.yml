@@ -51,8 +51,8 @@ services:
     #     - action: sync+restart
     #       path: ./webbclient/routes
     #       target: /webclient/routes
-    # volumes:                                                                            # DEV
-    #   - ./webbclient/public:/webclient/public
-    #   - ./webbclient/views:/webclient/views
-    #   - ./webbclient/routes:/webclient/routes
-    #   - ./webbclient/models:/webclient/models
+    volumes:                                                                            # DEV
+      - ./webbclient/public:/webclient/public
+      - ./webbclient/views:/webclient/views
+      - ./webbclient/routes:/webclient/routes
+      - ./webbclient/models:/webclient/models
