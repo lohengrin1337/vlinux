@@ -10,15 +10,17 @@ router.get('/', function(req, res, next) {
 /* GET log page. */
 router.get('/data', async function(req, res, next) {
     const filters = req.query;
-
-    // const filters = {
-    //     url: "google.com.ph"
-    // };
-
     const log = new logModel();
     const entries = await log.getEntries(filters);
+    const count = Object.keys(entries).length;
 
-    res.render('log', { title: 'bthlog', entries: entries, filters: filters });
+    const data = {
+        title: 'bthlog',
+        entries: entries,
+        count: count
+    };
+
+    res.render('log', data);
   });
 
 module.exports = router;

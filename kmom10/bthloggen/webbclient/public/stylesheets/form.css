@@ -40,13 +40,14 @@ div:has(button) {
 }
 
 button {
-    font-family: inherit;
     padding: var(--baseline-quart) var(--baseline-half);
     border: var(--border-button);
     border-radius: 5px;
     background-color: var(--bgcol-button);
+    font-family: inherit;
     color: inherit;
     font-size: inherit;
+    font-weight: 700;
     box-shadow: var(--shadow-light-small);
 }
 

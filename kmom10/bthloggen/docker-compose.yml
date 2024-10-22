@@ -53,5 +53,6 @@ services:
     #       target: /webclient/routes
     volumes:                                                                            # DEV
       - ./webbclient/public:/webclient/public
-      - ./webbclient/routes:/webclient/routes
       - ./webbclient/views:/webclient/views
+      - ./webbclient/routes:/webclient/routes
+      - ./webbclient/models:/webclient/models

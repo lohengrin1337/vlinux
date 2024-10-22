@@ -27,7 +27,9 @@ block content
             tr
                 th datetime
                 th ip
-                th url
+                th.space-between 
+                    span url
+                    span count: #{count}
         tbody
             each entry in entries
                 tr

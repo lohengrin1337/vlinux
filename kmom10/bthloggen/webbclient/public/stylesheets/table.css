@@ -27,3 +27,8 @@ tbody tr:hover {
     background-color: var(--bgcol-table-body-shade-2);
     cursor: default;
 }
+
+.space-between {
+    display: flex;
+    justify-content: space-between;
+}

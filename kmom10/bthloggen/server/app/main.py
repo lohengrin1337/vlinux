@@ -62,6 +62,9 @@ async def get_data(
         "month": month,
     }
 
+    print(f"*** FILTERS: {filters} ***")
+
+
     # use handler to get and filter entries
     res = await log.filter_entries(filters)
 
