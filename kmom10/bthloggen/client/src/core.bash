@@ -15,7 +15,9 @@ function app_use
 
     echo -e "CUSTOM_HOST=\"$host_name\"" >> "$CONFIG_FILE"
 
-    pretty_print "You are using '$host_name' as server host"
+    pretty_print -header \
+        "\t<<< UPDATE SERVER HOST >>>" \
+        "You are using '$host_name' as host for log-server"
 }
 
 
@@ -25,7 +27,10 @@ function app_use
 #
 function app_url
 {
-    pretty_print "URL to access log-server from browser:" "$PUBLIC_URL"
+    pretty_print -header \
+        "\t<<< PUBLIC URL'S >>>" \
+        "Log-server: $PUBLIC_URL_LOG_SERVER" \
+        "Webclient: $PUBLIC_URL_WEB_CLIENT"
 }
 
 

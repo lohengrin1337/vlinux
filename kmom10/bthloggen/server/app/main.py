@@ -49,23 +49,24 @@ async def get_data(
         Optional filters: ip, url, month, day and time """
 
     print("*** NEW '/data' REQUEST ***")
+    try:
+        log = LogHandler()
 
-    log = LogHandler()
+        # apply filters from query parameters
+        # order is relevant for speed of process of the actual log file
+        filters = {
+            "ip": ip,
+            "time": time,
+            "day": day,
+            "url": url,
+            "month": month,
+        }
 
-    # apply filters from query parameters
-    # order is relevant for speed of process of the actual log file
-    filters = {
-        "ip": ip,
-        "time": time,
-        "day": day,
-        "url": url,
-        "month": month,
-    }
+        print(f"*** FILTERS: {filters} ***")
 
-    print(f"*** FILTERS: {filters} ***")
+        # use handler to get and filter entries
+        res = await log.filter_entries(filters)
 
-
-    # use handler to get and filter entries
-    res = await log.filter_entries(filters)
-
-    return res
+        return res
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail="Log file not found")

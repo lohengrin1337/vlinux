@@ -15,7 +15,7 @@ services:
       - ./data:/server/app/data
       - ./server/app/src/log_handler.py:/server/app/src/log_handler.py                  # DEV
       - ./server/app/main.py:/server/app/main.py                                        # DEV
-    command: ["fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]   # DEV
+    # command: ["fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]   # DEV
 
   client:
     image: log-client                                                                   # DEV
@@ -25,7 +25,7 @@ services:
     links:
       - server:log-server
     volumes:
-      - ./client/bthloggen.bash:/client/bthloggen.bash                                  # DEV
+    #   - ./client/bthloggen.bash:/client/bthloggen.bash                                  # DEV
       - ./client/src:/client/src                                                        # DEV
 
   webbclient:
@@ -51,8 +51,8 @@ services:
     #     - action: sync+restart
     #       path: ./webbclient/routes
     #       target: /webclient/routes
-    volumes:                                                                            # DEV
-      - ./webbclient/public:/webclient/public
-      - ./webbclient/views:/webclient/views
-      - ./webbclient/routes:/webclient/routes
-      - ./webbclient/models:/webclient/models
+    # volumes:                                                                            # DEV
+    #   - ./webbclient/public:/webclient/public
+    #   - ./webbclient/views:/webclient/views
+    #   - ./webbclient/routes:/webclient/routes
+    #   - ./webbclient/models:/webclient/models

@@ -19,8 +19,9 @@ export HOST="${CUSTOM_HOST:-log-server}"
 export PORT="8000"
 export BASE_URL="$HOST:$PORT"
 
-# url for accessing log-server via browser
-export PUBLIC_URL="http://localhost:8080/"
+# urls for accessing log-server/webclient via browser
+export PUBLIC_URL_LOG_SERVER="http://localhost:8080/"
+export PUBLIC_URL_WEB_CLIENT="http://localhost:1338/"
 
 # define color codes
 export GREEN="\033[0;32m"

@@ -51,7 +51,7 @@ function response_error
 
     # parse code from header, and detail from body
     code="$(head -n 1 "$RESPONSE_TEMP" | grep -Eo "[0-9]{3}")"
-    detail="$( tail -n 1 "$RESPONSE_TEMP" | jq -r '.detail')"
+    body="$( tail -n 1 "$RESPONSE_TEMP")"
 
     case "$detail" in
         ( "Not Found" )
@@ -64,9 +64,10 @@ function response_error
         ( * )
             txt+=(
                 "Something went wrong!"
-                "Log-server: Response code: $code"
-                "Log-server: Detail: $detail"
+                "Make sure './data/log.json' is in place"
                 "Requested resource: '$url'"
+                "Response code: $code"
+                "Body: $body"
             )
     esac
 
