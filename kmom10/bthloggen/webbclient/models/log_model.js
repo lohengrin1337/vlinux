@@ -40,14 +40,6 @@ class logModel {
         }
     }
 
-    /**
-     * get current query
-     * 
-     * @return {String}
-     */
-    get query() {
-        return this.#query;
-    }
 
     /**
      * build query string from object {ip: "111"...}

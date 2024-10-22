@@ -30,7 +30,6 @@ router.get('/data', async function(req, res, next) {
         hasMore: count > end,
         nextPage: page + 1,
         lastFilters: filters
-        // lastQuery: log.query
     };
 
     res.render('log', data);
