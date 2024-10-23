@@ -2,4 +2,7 @@
 Dockerfile
 
 # Ignore node_modules
-node_modules
+node_modules/
+
+# ignore the file itself
+.dockerignore

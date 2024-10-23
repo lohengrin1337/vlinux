@@ -5,19 +5,19 @@ block content
     form.form(action="", method="get")
         div
             label(for="day") DAY
-            input(type="text", id="day", name="day", value=lastFilters.day, placeholder="12")
+            input(type="text", id="day", name="day", value=lastFilters.day, title="Day with two digits (leading zero) - e.g. 12 or 05")
         div
             label(for="month") MONTH
-            input(type="text", id="month", name="month", value=lastFilters.month, placeholder="aug")
+            input(type="text", id="month", name="month", value=lastFilters.month, title="Month with three characters (case-insensitive) - e.g. aug")
         div
             label(for="time") TIME
-            input(type="text", id="time", name="time", value=lastFilters.time, placeholder="12:13:14")
+            input(type="text", id="time", name="time", value=lastFilters.time, title="Time (hh / hh:mm / hh:mm:ss) - e.g. 12 or 12:13:14")
         div
             label(for="ip") IP
-            input(type="text", id="ip", name="ip", value=lastFilters.ip, placeholder="1.222")
+            input(type="text", id="ip", name="ip", value=lastFilters.ip, title="Ip address with numbers and dots (substring enabled) - e.g. 1.123.12")
         div
             label(for="url") URL
-            input(type="text", id="url", name="url", value=lastFilters.url, placeholder="google")
+            input(type="text", id="url", name="url", value=lastFilters.url, title="Web address (substring enabled, case-insensitive) - e.g. www.google")
         div
             button.button(type="submit") SEARCH
 
@@ -65,5 +65,5 @@ block content
             div.go-to-page
                 each val, key in lastFilters
                     input(type="hidden", name=key, value=val)
-                input(type="number", min=1, max=pageCount, step=1, name="page", value=pageCount)
+                input(type="number", min=1, max=pageCount, step=1, name="page", value=pageCount, title="Choose a page number")
                 button.button(type="submit") GO TO PAGE

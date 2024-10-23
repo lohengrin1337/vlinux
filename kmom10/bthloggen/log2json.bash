@@ -24,12 +24,14 @@
 ### ]
 ###
 
-# LOG_FILE="small.log"
 LOG_FILE="access-50k.log"
 AWK_SCRIPT="2json.awk"
 DESTINATION="data/log.json"
 
 echo -e "\n  Converting '$LOG_FILE' to '$DESTINATION'\n"
+
+# create dir './data' if not existing
+mkdir -p "data"
 
 # capture start time
 start_ms=$(date +%s%3N)
