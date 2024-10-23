@@ -16,10 +16,13 @@
 
 label {
     width: 100%;
+    font-family: var(--font-caps);
     font-size: 80%;
-    font-weight: 600;
+    font-weight: 300;
+    letter-spacing: 0.03em;
     margin-bottom: var(--baseline-quart);
     text-align: center;
+    text-transform: uppercase;
 }
 
 input {
@@ -38,7 +41,7 @@ div:has(button) {
     align-self: flex-end;
 }
 
-button {
+/* button {
     padding: var(--baseline-quart) var(--baseline-half);
     border: var(--border-button);
     border-radius: 5px;
@@ -54,7 +57,7 @@ button {
 button:hover {
     background-color: var(--bgcol-button-hover);
     cursor: pointer;
-}
+} */
 
 .form-container {
     width: 100%;

@@ -15,6 +15,9 @@ th, td {
 }
 
 th {
+    font-family: var(--font-caps);
+    font-weight: 300;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
     color: var(--col-table-header);
     background-color: var(--bgcol-table-header);

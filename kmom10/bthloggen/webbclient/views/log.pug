@@ -19,7 +19,7 @@ block content
             label(for="url") URL
             input(type="text", id="url", name="url", value=lastFilters.url, placeholder="google")
         div
-            button(type="submit") SEARCH
+            button.button(type="submit") SEARCH
 
     //- table with max 100 entries
     table
@@ -45,10 +45,10 @@ block content
                     input(type="hidden", name=key, value=val)
                 input(type="hidden", name="page", value=page - 1)
                 div.btn-container
-                    button(type="submit") &lt;
+                    button.button(type="submit") &lt;
 
         if pageCount > 1
-            span PAGE #{page} OF #{pageCount}
+            span.caps PAGE #{page} OF #{pageCount}
 
         if page < pageCount
             //- button for next page (if any)
@@ -57,7 +57,7 @@ block content
                     input(type="hidden", name=key, value=val)
                 input(type="hidden", name="page", value=page + 1)
                 div.btn-container
-                    button(type="submit") &gt;
+                    button.button(type="submit") &gt;
 
     if pageCount > 1
         //- number field and button - go to any page
@@ -66,4 +66,4 @@ block content
                 each val, key in lastFilters
                     input(type="hidden", name=key, value=val)
                 input(type="number", min=1, max=pageCount, step=1, name="page", value=pageCount)
-                button(type="submit") GO TO PAGE
+                button.button(type="submit") GO TO PAGE

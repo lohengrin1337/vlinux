@@ -1,0 +1,28 @@
+.button {
+    display: block;
+    width: fit-content;
+    padding: var(--baseline-quart) var(--baseline-half);
+    border: var(--border-button);
+    border-radius: 5px;
+    color: inherit;
+    background-color: var(--bgcol-button);
+    text-decoration: none;
+    font-family: var(--font-caps);
+    font-size: inherit;
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    box-shadow: var(--shadow-light-small);
+}
+
+.button:hover {
+    background-color: var(--bgcol-button-hover);
+    cursor: pointer;
+}
+
+.btn-big {
+    padding: var(--baseline-half) var(--baseline);
+    font-size: 120%;
+    /* font-weight: 300; */
+    margin: auto;
+}

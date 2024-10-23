@@ -26,6 +26,18 @@
         font-size: var(--font-size-3-m);
     }
 
+    .h1 {
+        font-size: var(--font-size-1-m);
+    }
+
+    .h2 {
+        font-size: var(--font-size-3-m);
+    }
+
+    .h3 {
+        font-size: var(--font-size-3-m);
+    }
+
     footer {
         font-size: var(--font-size-4-m);
     }

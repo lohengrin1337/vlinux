@@ -134,6 +134,25 @@ h4 {
     font-size: 1rem;
 }
 
+.h1 {
+    font-size: var(--font-size-1-d);
+    margin-bottom: var(--baseline-x2);
+}
+
+.h2 {
+    font-size: var(--font-size-3-d);
+    margin-bottom: var(--baseline);
+}
+
+.h3 {
+    font-size: var(--font-size-4-d);
+    margin-bottom: var(--baseline);
+}
+
+.h4 {
+    font-size: 1rem;
+}
+
 * + h2 {
     margin-top: var(--baseline-x4);
 }
@@ -146,10 +165,26 @@ h2 + h3 {
     margin-top: 0;
 }
 
+
 a {
     color: var(--col-accent);
     text-decoration: none;
     font-weight: 500;
+}
+
+.caps {
+    font-family: var(--font-caps);
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.center {
+    text-align: center;
+}
+
+.weight-150 {
+    font-weight: 150;
 }
 
 figure,
