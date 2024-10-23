@@ -1,25 +1,27 @@
 extends layout
 
 block content
-    form(action="", method="get")
-        div
-            label(for="ip") IP
-            input(type="text", id="ip", name="ip")
-        div
-            label(for="url") URL
-            input(type="text", id="url", name="url")
-        div
-            label(for="month") MONTH
-            input(type="text", id="month", name="month")
+    //- search fields (pug handles undefined filters well)
+    form.form(action="", method="get")
         div
             label(for="day") DAY
-            input(type="text", id="day", name="day")
+            input(type="text", id="day", name="day", value=lastFilters.day, placeholder="12")
+        div
+            label(for="month") MONTH
+            input(type="text", id="month", name="month", value=lastFilters.month, placeholder="aug")
         div
             label(for="time") TIME
-            input(type="text", id="time", name="time")
+            input(type="text", id="time", name="time", value=lastFilters.time, placeholder="12:13:14")
+        div
+            label(for="ip") IP
+            input(type="text", id="ip", name="ip", value=lastFilters.ip, placeholder="1.222")
+        div
+            label(for="url") URL
+            input(type="text", id="url", name="url", value=lastFilters.url, placeholder="google")
         div
             button(type="submit") SEARCH
 
+    //- table with max 100 entries
     table
         thead
             tr
@@ -36,20 +38,32 @@ block content
                     td #{entry.url}
 
     div.form-container
-        if nextPage > 2
-            form.form-small(action="", method="get")
+        if page > 1
+            //- button for previous page (if any)
+            form.form.form-small(action="", method="get")
                 each val, key in lastFilters
                     input(type="hidden", name=key, value=val)
-                input(type="hidden", name="page", value=nextPage - 2)
+                input(type="hidden", name="page", value=page - 1)
                 div.btn-container
-                    button(type="submit") &lt; PREVIOUS
+                    button(type="submit") &lt;
 
-        span PAGE #{nextPage - 1} OF #{pageCount}
+        if pageCount > 1
+            span PAGE #{page} OF #{pageCount}
 
-        if hasMore
-            form.form-small(action="", method="get")
+        if page < pageCount
+            //- button for next page (if any)
+            form.form.form-small(action="", method="get")
                 each val, key in lastFilters
                     input(type="hidden", name=key, value=val)
-                input(type="hidden", name="page", value=nextPage)
+                input(type="hidden", name="page", value=page + 1)
                 div.btn-container
-                    button(type="submit") NEXT &gt;
+                    button(type="submit") &gt;
+
+    if pageCount > 1
+        //- number field and button - go to any page
+        form.form.form-small(action="", method="get")
+            div.go-to-page
+                each val, key in lastFilters
+                    input(type="hidden", name=key, value=val)
+                input(type="number", min=1, max=pageCount, step=1, name="page", value=pageCount)
+                button(type="submit") GO TO PAGE

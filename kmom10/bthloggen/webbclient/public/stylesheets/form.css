@@ -1,4 +1,4 @@
-form {
+.form {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -7,7 +7,7 @@ form {
     gap: var(--baseline-half);
 }
 
-form div {
+.form div {
     max-width: 140px;
     display: flex;
     flex-direction: column;
@@ -32,7 +32,6 @@ input {
     color: inherit;
     font-size: inherit;
     box-shadow: var(--shadow-light-small);
-
 }
 
 div:has(button) {
@@ -62,14 +61,22 @@ button:hover {
     max-width: none;
     display: flex;
     justify-content: space-between;
+    gap: var(--baseline);
+}
+
+.form-container:has(+ form) {
+    margin-bottom: var(--baseline);
 }
 
 .form-container form {
     width: fit-content;
+    flex-grow: 0;
 }
 
 .form-container span {
     align-self: center;
+    flex-grow: 1;
+    text-align: center;
 }
 
 .btn-container {
@@ -84,4 +91,20 @@ button:hover {
 
 .btn-container button {
     margin: auto;
+}
+
+.form .go-to-page {
+    width: 100%;
+    max-width: none;
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--baseline);
+}
+
+.form .go-to-page input {
+    width: 80px;
+}
+
+.form .go-to-page button {
+    width: fit-content;
 }
