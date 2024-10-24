@@ -85,7 +85,7 @@ Det har varit kul att lära sig jobba med `sed` och `awk`. `sed` känns ett steg
 
 I `2json.awk` skapas/ersätts *output-filen*, och varje rad i *input-filen* itereras. Varje rad matchas mot ett reguljärt uttryck, som kontrollerar och fångar upp ip, dag, månad, tid och url (*case-insensitive*). Månad och url konverteras till *lower case*, och sedan skrivs datan för varje rad i json-format till *output-filen*.
 
-Tiden för exekvering brukar ligga mellan två och tre sekunder. Jag experimenterade med att spara json-raderna i en array, för att sedan skriva till fil vid ett tillfälle, istället för varje
+Tiden för exekvering brukar ligga mellan två och tre sekunder. Jag jobbade på att optimera skriptet genom att bygga upp en sträng för varje rad/json-objekt, och skriva till fil en gång per objekt istället för sju, men exekveringstiden påverkades inte märkbart.
 
 ### krav 2
 
