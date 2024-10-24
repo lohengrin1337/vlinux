@@ -24,9 +24,9 @@ services:
       - bthloggen
     links:
       - server:log-server
-    # volumes:
+    volumes:
     #   - ./client/bthloggen.bash:/client/bthloggen.bash                                  # DEV
-      # - ./client/src:/client/src                                                        # DEV
+      - ./client/src:/client/src                                                        # DEV
 
   webbclient:
     image: log-webclient
