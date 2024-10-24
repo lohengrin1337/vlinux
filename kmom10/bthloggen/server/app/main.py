@@ -62,7 +62,7 @@ async def get_data(
         }
 
         # use handler to get and filter entries
-        res = await log.filter_entries(filters)
+        res = await log.get_entries(filters)
 
         return res
     except FileNotFoundError as e:

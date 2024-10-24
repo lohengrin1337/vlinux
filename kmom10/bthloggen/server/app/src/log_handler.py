@@ -21,7 +21,28 @@ class LogHandler():
 
 
 
-    async def fetch_log(self):
+    async def get_entries(self, filters: dict = {}):
+        """ Filter the entries by optional filters, and return result (list of dicts) """
+        await self._fetch_log()
+
+        # print count to server log
+        count = len(self._log)
+        print(f"*** 'no filter':\t {count} entries")
+
+        for f_key, f_val in filters.items():
+            if f_val:
+                f_val_lower = f_val.lower()
+                self._log = list(filter(lambda entry: self._filter_by(entry, f_key, f_val_lower), self._log))
+
+                # print count after each filtering to server log
+                count = len(self._log)
+                print(f"*** '{f_key} {f_val}':\t {count} entries")
+
+        return self._log
+
+
+
+    async def _fetch_log(self):
         """ Fetch_log and parse json-log to self._log
             List of dicts [{'ip': '11.11.1111', 'day': ...}, {}...] """
         with open(self._file_path, "r") as file:
@@ -29,80 +50,30 @@ class LogHandler():
 
 
 
-    async def all_entries(self):
-        """ Get all entries (list of dicts) """
-        if not self._log:
-            await self.fetch_log()
-
-        # print count to server log
-        # count = len(self._log)
-        # print(f"all entries: {count}")
-
-        return self._log
-
-
-
-    async def filter_entries(self, filters: dict = {}):
-        """ Filter the entries by optional filters, and return result (list of dicts) """
-        result = await self.all_entries()
-
-        for f_key, f_val in filters.items():
-            if f_val:
-                f_val_lower = f_val.lower()
-                result = list(filter(lambda entry: self.filter_by(entry, f_key, f_val_lower), result))
-
-                # print count to server log
-                # count = len(result)
-                # print(f"{f_key}: {count}")
-
-        return result
-
-
-
-    def filter_by(self, entry: dict, f_key: str, f_val: str):
+    def _filter_by(self, entry: dict, f_key: str, f_val: str):
         """ Filter entries by specified value (case-insensitive) """
         match f_key:
             case "ip" | "url":
-                return self.val_in_data(f_val, entry[f_key])
+                return self._val_in_data(f_val, entry[f_key])
             case "month" | "day":
-                return self.val_is_data(f_val, entry[f_key])
+                return self._val_is_data(f_val, entry[f_key])
             case "time":
-                return self.val_in_time(f_val, entry[f_key])
+                return self._data_starts_with_val(f_val, entry[f_key])
 
 
 
-    def val_in_data(self, value: str, data: str):
-        """ check if data (ip/url) has value in it (case-insensitive) """
+    def _val_in_data(self, value: str, data: str):
+        """ check if data has value in it (ip/url, case-insensitive) """
         return value in data
 
 
 
-    def val_is_data(self, value: str, data: str):
-        """ check if value matches data (month/day) (case-insensitive) """
+    def _val_is_data(self, value: str, data: str):
+        """ check if value matches data (month/day, case-insensitive) """
         return value == data
 
 
 
-    def val_in_time(self, value: str, time: str):
-        """ Check if value (time query) matches time (time of entry)
-            one unit at a time
-            hours, minutes, seconds """
-        # log entry (time: '12:13:14' -> ['12', '13', '14'])
-        time_list = time.split(":")
-        time_length = len(time_list)
-
-        # time query (time= '12' -> ['12'] or '12:13:14' -> ['12', '13', '14'])
-        value_list = value.split(":")
-        value_length = len(value_list)
-
-        flag = True
-        i = 0
-
-        # iterate until a query unit is not matching, or
-        #         until the value_list is done, or
-        #         until the time_list is done
-        while flag and value_length > i and time_length > i:
-            flag = True if value_list[i] == time_list[i] else False
-            i += 1
-
-        return flag
+    def _data_starts_with_val(self, value: str, data: str):
+        """ Check if data starts with value (time) """
+        return data.startswith(value)

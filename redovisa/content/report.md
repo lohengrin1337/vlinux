@@ -89,10 +89,15 @@ Tiden för exekvering brukar ligga mellan två och tre sekunder. Jag jobbade på
 
 ### krav 2
 
-Jag letade efter ett språk/ramverk som skulle vara lämpligt för ett REST API, och där jag samtidgt kunde lära mig något nytt. Det landade i python och FastAPI, och det blev både en rolig och bra lösning.
+Jag letade efter ett ramverk som skulle vara lämpligt för ett REST API, och där jag samtidgt kunde lära mig något nytt. Det landade i python och FastAPI, och det blev både en rolig och bra lösning.
 
 Servern lyssnar efter requests på tre routes, vilka svarar med response med json-body. `/` ger en dokumentation över olika routes, `/filters` ger en lista med de olika filter som stöds, och `/data` ger hela eller matchande delar av log-filen.
 
+Jag valde att bygga stöd för *query strings* hos `/data` routen, för att enkelt kunna stödja filtrering med valfritt antal filter. FastAPI hade en smidig lösning för att fånga upp parameterna och dess värden, genom att ange parameterna som argument till funktionen `get_data()`
+
+Klassen `LogHandler` får ansvaret att läsa in log-filen, och filterar den med de filter som skickas med (i den ordning som filterna är angivna), och returnerar en lista med *dictionaries*. FastAPI hanterar datastrukturen, och levererar automatiskt ett json-response.
+
+Koden för filtrering av log-filen är uppdelad i tre olika metoder, som gör exakt matching (dag, månad), sub-strängs-matchning (ip, url), och 
 
 
 ### krav 3
