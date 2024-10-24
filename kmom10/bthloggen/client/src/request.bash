@@ -28,6 +28,4 @@ function request_log_server
 
     # remove header from response, leave json body (last line)
     sed -i '$!d' "$RESPONSE_TEMP"
-
-    export RESPONSE_TEMP
 }
