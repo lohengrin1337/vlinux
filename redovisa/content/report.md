@@ -97,7 +97,7 @@ Jag valde att bygga stöd för *query strings* hos `/data` routen, för att enke
 
 Klassen `LogHandler` får ansvaret att läsa in log-filen, och filterar den med de filter som skickas med (i den ordning som filterna är angivna), och returnerar en lista med *dictionaries*. FastAPI hanterar datastrukturen, och levererar automatiskt ett json-response.
 
-Koden för filtrering av log-filen är uppdelad i tre olika metoder, som gör exakt matching (dag, månad), sub-strängs-matchning (ip, url), och 
+Koden för filtrering av log-filen är uppdelad i tre olika metoder, som gör exakt matching (dag, månad), sub-strängs-matchning (ip, url), och matchning av början av sträng (time). Ordningen för filterna styrs i `get_data()`, och jag valde ordningen ip, time, day, url, month baserat på hur den specifika log-filen ser ut, och hur jag tror en användare skulle nyttja filterna. Målet är att tidigt få ner antalet matchningar.
 
 
 ### krav 3

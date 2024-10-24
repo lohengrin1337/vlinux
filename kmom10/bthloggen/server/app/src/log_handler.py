@@ -25,7 +25,7 @@ class LogHandler():
         """ Filter the entries by optional filters, and return result (list of dicts) """
         await self._fetch_log()
 
-        # print count to server log
+        # print count to server log (all entries)
         count = len(self._log)
         print(f"*** 'no filter':\t {count} entries")
 
@@ -34,7 +34,7 @@ class LogHandler():
                 f_val_lower = f_val.lower()
                 self._log = list(filter(lambda entry: self._filter_by(entry, f_key, f_val_lower), self._log))
 
-                # print count after each filtering to server log
+                # print count to server log (after each filter)
                 count = len(self._log)
                 print(f"*** '{f_key} {f_val}':\t {count} entries")
 
