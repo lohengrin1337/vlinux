@@ -89,7 +89,7 @@ Tiden för exekvering brukar ligga mellan två och tre sekunder. Jag jobbade på
 
 ### krav 2
 
-Jag letade efter ett ramverk som skulle vara lämpligt för ett REST API, och där jag samtidgt kunde lära mig något nytt. Det landade i python och FastAPI, och det blev både en rolig och bra lösning.
+Jag letade efter ett ramverk som skulle vara lämpligt för ett REST API, och där jag samtidgt kunde lära mig något nytt. Det landade i python och FastAPI, och det blev både en rolig och bra lösning. Docker-containern får utgå från `python:3.13-slim`, och sedan installera vad som behövs för ramverket. Kommandot `"--host", "0.0.0.0"` ser till att servern även kan ta emot requests via localhost.
 
 Servern lyssnar efter requests på tre routes, vilka svarar med response med json-body. `/` ger en dokumentation över olika routes, `/filters` ger en lista med de olika filter som stöds, och `/data` ger hela eller matchande delar av log-filen.
 
@@ -97,10 +97,14 @@ Jag valde att bygga stöd för *query strings* hos `/data` routen, för att enke
 
 Klassen `LogHandler` får ansvaret att läsa in log-filen, och filterar den med de filter som skickas med (i den ordning som filterna är angivna), och returnerar en lista med *dictionaries*. FastAPI hanterar datastrukturen, och levererar automatiskt ett json-response.
 
-Koden för filtrering av log-filen är uppdelad i tre olika metoder, som gör exakt matching (dag, månad), sub-strängs-matchning (ip, url), och matchning av början av sträng (time). Ordningen för filterna styrs i `get_data()`, och jag valde ordningen ip, time, day, url, month baserat på hur den specifika log-filen ser ut, och hur jag tror en användare skulle nyttja filterna. Målet är att tidigt få ner antalet matchningar.
+Koden för filtrering av log-filen är uppdelad i tre olika metoder, som gör exakt matching (dag, månad), sub-strängs-matchning (ip, url), och matchning av början av sträng (time). Ordningen för filterna styrs i `get_data()`, och jag valde ordningen ip, time, day, url, month baserat på hur den specifika log-filen ser ut, och hur jag tror en användare skulle nyttja filterna. Syftet var att tidigt få ner antalet matchningar, vilket tidsoptimerar filtreringen.
 
 
 ### krav 3
+
+Den grundläggande strukturen för bash-scriptet är samma som i *mazerunner 1*, med en main-modul `bthloggen.bash` som hanterar inkommande argument, och ett antal moduler `src/` med variabler, funktioner för request, felhantering, verifiering, parsning, samt huvudfunktioner `src/core.bash` som styr flödet för respektive option/kommando.
+
+Med kommandot `use` sätts den globala variablen `CUSTOM_HOST` genom att `CUSTOM_HOST="<host-name>"` skrivs till filen `client.conf`
 
 ### krav 4
 

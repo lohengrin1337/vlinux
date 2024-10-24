@@ -6,12 +6,12 @@
 ## Author: Olof Jönsson - oljn22
 ##
 
-# source client.conf if exists (contains global CUSTOM_HOST=<name set with command 'use'>)
+# source .host_name if exists (contains global CUSTOM_HOST=<name set with command 'use'>)
 # shellcheck disable=SC1091
-[[ -f "client.conf" ]] && source "client.conf"
+[[ -f ".host_name" ]] && source ".host_name"
 
 # source global variables
-source "src/variables.bash"
+source ".env"
 
 # source print- and parse functions
 source "src/utils.bash"

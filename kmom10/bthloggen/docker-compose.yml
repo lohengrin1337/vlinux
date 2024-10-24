@@ -25,7 +25,8 @@ services:
     links:
       - server:log-server
     volumes:
-    #   - ./client/bthloggen.bash:/client/bthloggen.bash                                  # DEV
+      - ./client/bthloggen.bash:/client/bthloggen.bash                                  # DEV
+      - ./client/.env:/client/.env                                  # DEV
       - ./client/src:/client/src                                                        # DEV
 
   webbclient:

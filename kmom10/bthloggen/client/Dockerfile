@@ -5,8 +5,6 @@ RUN apt update && \
 
 WORKDIR /client
 
-COPY ./bthloggen.bash /client/bthloggen.bash
-
-COPY ./src /client/src
+COPY . /client
 
 CMD [ "bash" ]

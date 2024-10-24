@@ -7,13 +7,13 @@
 
 
 #
-# set hostname of server to use
+# set hostname of server to use (write to client env)
 #
 function app_use
 {
     local host_name="$1"
 
-    echo -e "CUSTOM_HOST=\"$host_name\"" >> "$CONFIG_FILE"
+    echo -e "CUSTOM_HOST=\"$host_name\"" >> "$HOST_NAME_FILE"
 
     pretty_print -header \
         "\t<<< UPDATE SERVER HOST >>>" \
