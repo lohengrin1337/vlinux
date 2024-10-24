@@ -89,6 +89,12 @@ Tiden för exekvering brukar ligga mellan två och tre sekunder. Jag jobbade på
 
 ### krav 2
 
+Jag letade efter ett språk/ramverk som skulle vara lämpligt för ett REST API, och där jag samtidgt kunde lära mig något nytt. Det landade i python och FastAPI, och det blev både en rolig och bra lösning.
+
+Servern lyssnar efter requests på tre routes, vilka svarar med response med json-body. `/` ger en dokumentation över olika routes, `/filters` ger en lista med de olika filter som stöds, och `/data` ger hela eller matchande delar av log-filen.
+
+
+
 ### krav 3
 
 ### krav 4
