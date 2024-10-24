@@ -41,7 +41,7 @@ awk -v OutputFileName="$DESTINATION" -f "$AWK_SCRIPT" "$LOG_FILE"
 
 # calc and convert duration
 end_ms=$(date +%s%3N)
-duration_ms=$(( $end_ms - $start_ms ))
+duration_ms=$(( end_ms - start_ms ))
 duration_s=$(bc <<<"scale=2; $duration_ms / 1000")
 
 echo -e "  Finished in $duration_s seconds\n"

@@ -4,21 +4,7 @@
 ### Convert logfile to JSON
 ###
 
-#
-# write row-data to json object
-#
-function dataToObject(ip, day, month, time, url) {
-    if (!firstIteration) {
-        print "\t}," >> outputFile    # closing bracket WITH COMMA for previous object (skip first time)
-    }
 
-    print "\t{"                                 >> outputFile # opening bracket for current object
-    print "\t\t\"ip\": "     "\"" ip "\","      >> outputFile
-    print "\t\t\"day\": "    "\"" day "\","     >> outputFile
-    print "\t\t\"month\": "  "\"" month "\","   >> outputFile
-    print "\t\t\"time\": "   "\"" time "\","    >> outputFile
-    print "\t\t\"url\": "    "\"" url "\""      >> outputFile # no trailing comma
-}
 
 #
 # variables and file creation
@@ -64,4 +50,27 @@ END {
     print "\t}" >> outputFile         # closing bracket WITHOUT COMMA for last object
     print "]"   >> outputFile         # close array
     close(outputFile)                 # close file stream
+}
+
+
+
+#
+# build json-string from row-data, and write to file
+#
+function dataToObject(ip, day, month, time, url) {
+    jsonStr = ""
+
+    if (!firstIteration) {
+        jsonStr = jsonStr "\t},\n"      # closing bracket WITH COMMA for previous object (skip first time)
+    }
+
+    jsonStr = jsonStr "\t{\n"                               # opening bracket for current object
+    jsonStr = jsonStr "\t\t\"ip\": "     "\"" ip "\",\n"   
+    jsonStr = jsonStr "\t\t\"day\": "    "\"" day "\",\n"  
+    jsonStr = jsonStr "\t\t\"month\": "  "\"" month "\",\n"
+    jsonStr = jsonStr "\t\t\"time\": "   "\"" time "\",\n" 
+    jsonStr = jsonStr "\t\t\"url\": "    "\"" url "\""      # no trailing comma
+
+    # write to file
+    print jsonStr >> outputFile         # newline added by default
 }

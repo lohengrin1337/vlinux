@@ -77,5 +77,24 @@ För att kunna återanvända koden på ett bra sätt i spel-loopen i mazerunner,
 Det har varit kul att lära sig jobba med `sed` och `awk`. `sed` känns ett steg mer kraftfullt än `grep`, med stöd för *substitution* och möjlighet att editera en fil direkt. `awk` känns i sin tur några steg mer avancerat än `sed`, med stöd för en mängd olika saker, som ett eget litet programmeringsspråk. Det känns skönt att lära sig olika verkyg som gör linux-miljön enklare.
 
 
-<h2 id="kmom10">kmom10</h2>
+<h2 id="kmom10">bthloggen (kmom10)</h2>
 
+### krav 1
+
+`log2json.bash` skapar mappen `./data` om den inte redan finns med `mkdir -p`, exekverar `2json.awk` med `access-50k.log` som *input-fil*, och `data/log.json` som *output-fil*, samt mäter tiden och skriver ut status.
+
+I `2json.awk` skapas/ersätts *output-filen*, och varje rad i *input-filen* itereras. Varje rad matchas mot ett reguljärt uttryck, som kontrollerar och fångar upp ip, dag, månad, tid och url (*case-insensitive*). Månad och url konverteras till *lower case*, och sedan skrivs datan för varje rad i json-format till *output-filen*.
+
+Tiden för exekvering brukar ligga mellan två och tre sekunder. Jag experimenterade med att spara json-raderna i en array, för att sedan skriva till fil vid ett tillfälle, istället för varje
+
+### krav 2
+
+### krav 3
+
+### krav 4
+
+### krav 5
+
+### projektet
+
+### kursen
