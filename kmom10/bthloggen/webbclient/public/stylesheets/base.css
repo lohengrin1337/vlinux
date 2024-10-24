@@ -84,7 +84,6 @@ footer {
     align-items: center;
     color: var(--col-accent);
     font-size: var(--font-size-4-d);
-    text-transform: lowercase;
     padding: var(--baseline-half) var(--baseline-x2);
     border-top: 3px solid var(--col-accent);
 }
