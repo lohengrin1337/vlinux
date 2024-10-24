@@ -32,6 +32,7 @@ function curl_error
     local txt=(
         "Request to server failed"
         "$(cat "$RESPONSE_TEMP")"
+        "Tip: '$0 use log-server'"
     )
 
     pretty_print -red "${txt[@]}"

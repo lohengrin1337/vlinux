@@ -56,7 +56,7 @@ function multiply_str
         res="$res$str"
     }
 
-    export MULTIPLIED_STR="$res"
+    MULTIPLIED_STR="$res"
 }
 
 
@@ -90,7 +90,7 @@ function build_query
         shift
     done
 
-    export QUERY_STRING="$query"
+    QUERY_STRING="$query"
 }
 
 
@@ -113,7 +113,7 @@ function stringify_filters
 
     [[ -z $filters ]] && filters="no filters"
 
-    export FILTERS="$filters"
+    FILTERS="$filters"
 }
 
 
@@ -124,7 +124,6 @@ function stringify_filters
 function count_entries
 {
     COUNT="$(jq '. | length' "$RESPONSE_TEMP")"
-    export COUNT
 }
 
 
