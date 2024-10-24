@@ -17,7 +17,7 @@ function app_use
 
     pretty_print -header \
         "\t<<< UPDATE SERVER HOST >>>" \
-        "You are using '$host_name' as host for log-server"
+        "You are using '$host_name' as server host"
 }
 
 
