@@ -26,7 +26,6 @@ class LogHandler():
             List of dicts [{'ip': '11.11.1111', 'day': ...}, {}...] """
         with open(self._file_path, "r") as file:
             self._log = json.load(file)
-            print("*** LOG WAS FETCHED ***")
 
 
 
@@ -36,8 +35,8 @@ class LogHandler():
             await self.fetch_log()
 
         # print count to server log
-        count = len(self._log)
-        print(f"all entries: {count}")
+        # count = len(self._log)
+        # print(f"all entries: {count}")
 
         return self._log
 
@@ -53,8 +52,8 @@ class LogHandler():
                 result = list(filter(lambda entry: self.filter_by(entry, f_key, f_val_lower), result))
 
                 # print count to server log
-                count = len(result)
-                print(f"{f_key}: {count}")
+                # count = len(result)
+                # print(f"{f_key}: {count}")
 
         return result
 

@@ -48,7 +48,6 @@ async def get_data(
     """ Get entries
         Optional filters: ip, url, month, day and time """
 
-    print("*** NEW '/data' REQUEST ***")
     try:
         log = LogHandler()
 
@@ -61,8 +60,6 @@ async def get_data(
             "url": url,
             "month": month,
         }
-
-        print(f"*** FILTERS: {filters} ***")
 
         # use handler to get and filter entries
         res = await log.filter_entries(filters)
