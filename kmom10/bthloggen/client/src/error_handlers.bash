@@ -30,8 +30,8 @@ function badUsage
 function curl_error
 {
     local txt=(
-        "Curl failed when requesting '$1'"
-        "Message from curl: $(cat "$RESPONSE_TEMP")"
+        "Request to server failed"
+        "$(cat "$RESPONSE_TEMP")"
     )
 
     pretty_print -red "${txt[@]}"
