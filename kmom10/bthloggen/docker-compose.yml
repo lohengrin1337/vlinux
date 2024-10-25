@@ -3,34 +3,27 @@ networks:
 
 services:
   server:
-    image: log-server                                                                   # DEV
+    image: lohengrin1337/bthloggen-server:1.0
     container_name: "log-server"
     networks:
       - bthloggen
     restart:
       "always"
     ports:
-      - "8080:8000"                                                                     # DEV
+      - "8080:8000"
     volumes:
       - ./data:/server/app/data
-      - ./server/app/src/log_handler.py:/server/app/src/log_handler.py                  # DEV
-      - ./server/app/main.py:/server/app/main.py                                        # DEV
-    # command: ["fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]   # DEV
 
   client:
-    image: log-client                                                                   # DEV
+    image: lohengrin1337/bthloggen-client:1.0
     container_name: "log-client"
     networks:
       - bthloggen
     links:
       - server:log-server
-    volumes:
-      - ./client/bthloggen.bash:/client/bthloggen.bash                                  # DEV
-      - ./client/.env:/client/.env                                  # DEV
-      - ./client/src:/client/src                                                        # DEV
 
   webbclient:
-    image: log-webclient
+    image: lohengrin1337/bthloggen-server:1.0
     container_name: log-webclient
     networks:
       - bthloggen
@@ -40,8 +33,3 @@ services:
       - server:log-server
     ports:
       - 1338:3000
-    volumes:                                                                            # DEV
-      - ./webbclient/public:/webclient/public
-      - ./webbclient/views:/webclient/views
-      - ./webbclient/routes:/webclient/routes
-      - ./webbclient/models:/webclient/models
