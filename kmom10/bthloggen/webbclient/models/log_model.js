@@ -1,4 +1,10 @@
+/**
+ * Module for LogModel of bthloggen webclient
+ */
+
+
 const axios = require('axios');
+
 
 /**
  * model to handle requests to log-server
@@ -11,13 +17,18 @@ class logModel {
     #baseUrl;
     #query = ""
 
-    constructor(
-        host = this.#HOST,
-        port = this.#PORT,
-    ) {
-        // build baseUrl
+
+    /**
+     * build baseUrl
+     * 
+     * @param {String|null} host 
+     * @param {String|null} port 
+     */
+    constructor(host = this.#HOST, port = this.#PORT) {
         this.#baseUrl = `http://${host}:${port}`;
     }
+
+
 
     /**
      * get matching log entries
@@ -29,8 +40,6 @@ class logModel {
         // build query string
         await this.#buildQuery(filters);
 
-        console.log("*** VALID QUERY???:", this.#query, " ***")
-
         try {
             // request server
             const response = await axios.get(this.#baseUrl + this.#ENTRY_ROUTE + this.#query);
@@ -39,6 +48,7 @@ class logModel {
             console.error("Error fetching log data:", error.message);
         }
     }
+
 
 
     /**
@@ -59,6 +69,8 @@ class logModel {
         this.#query = query;
     }
 
+
+
     /**
      * remove invalid filters
      * 
@@ -68,20 +80,16 @@ class logModel {
     async #cleanFilters(filters){
         const supported_filters = await this.#getSupportedFilters();
 
-        console.log("*** FILTERS BEFORE:", filters, " ***")
-        console.log("*** SUPPORTED_FILTERS:", supported_filters, " ***")
-
-
         for (let name in filters) {
             if (!filters[name] || !(supported_filters.includes(name))) {
                 delete filters[name];
             }
         }
 
-        console.log("*** FILTERS AFTER:", filters, " ***")
-
         return filters;
     }
+
+
 
     /**
      * get list of valid filters from log-server

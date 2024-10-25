@@ -95,20 +95,38 @@ Servern lyssnar efter requests på tre routes, vilka svarar med response med jso
 
 Jag valde att bygga stöd för *query strings* hos `/data` routen, för att enkelt kunna stödja filtrering med valfritt antal filter. FastAPI hade en smidig lösning för att fånga upp parameterna och dess värden, genom att ange parameterna som argument till funktionen `get_data()`
 
-Klassen `LogHandler` får ansvaret att läsa in log-filen, och filterar den med de filter som skickas med (i den ordning som filterna är angivna), och returnerar en lista med *dictionaries*. FastAPI hanterar datastrukturen, och levererar automatiskt ett json-response.
+Klassen `LogHandler` får ansvaret att läsa in log-filen, och filterar den med de filter som skickas med (i den ordning som filterna är angivna), och returnerar en lista med *dictionaries*. FastAPI hanterar datastrukturen, och levererar automatiskt ett json-response. Metoderna är asynkrona, vilket förbättrar prestandan vid flera parallella requests.
 
 Koden för filtrering av log-filen är uppdelad i tre olika metoder, som gör exakt matching (dag, månad), sub-strängs-matchning (ip, url), och matchning av början av sträng (time). Ordningen för filterna styrs i `get_data()`, och jag valde ordningen ip, time, day, url, month baserat på hur den specifika log-filen ser ut, och hur jag tror en användare skulle nyttja filterna. Syftet var att tidigt få ner antalet matchningar, vilket tidsoptimerar filtreringen.
 
 
 ### krav 3
 
-Den grundläggande strukturen för bash-scriptet är samma som i *mazerunner 1*, med en main-modul `bthloggen.bash` som hanterar inkommande argument, och ett antal moduler `src/` med variabler, funktioner för request, felhantering, verifiering, parsning, samt huvudfunktioner `src/core.bash` som styr flödet för respektive option/kommando.
+Den grundläggande strukturen för bash-scriptet är samma som i *mazerunner 1*, med en main-modul `bthloggen.bash` som hanterar inkommande argument, `.env` med globala variabler, och ett antal moduler `src/` med funktioner för request, felhantering, verifiering, parsning, samt huvudfunktioner `src/core.bash` som styr flödet för respektive option/kommando.
 
-Med kommandot `use` sätts den globala variablen `CUSTOM_HOST` genom att `CUSTOM_HOST="<host-name>"` skrivs till filen `client.conf`
+Med kommandot `use` sätts den globala variablen `CUSTOM_HOST` genom att `CUSTOM_HOST="<host-name>"` skrivs till filen `.host_name`, vilken läses in i `bthloggen.bash` om den finns.
+
+`url` visar upp de publicerade adressera till både log-servern och webbklienten.
+
+`view [<filter> <value> ...]` anropar `app_view` optionella filter som argument. Filterna verifieras mot log-serverns `/filters`, och en *query string* samt läsbar sträng byggs upp. Därefter skickas en förfrågan till logserverns `/data<query>`, responsen verifieras, och sparas till en temporär fil (`sed` för att skala bort header), som sedan parsas till csv med `jq`, och till tabellformat med `awk`. Innehållet i den temporära filen uppdatteras för varje steg. Till slut skrivs tabellen ut inramad och med rubrik. När programmet avslutas rensas den temporära filen bort med `trap 'rm -f "$RESPONSE_TEMP"' EXIT`.
+
+`--count` kan användas som option till `view`, och då anropas istället `app_count_view`, där json-objekten räknas med `jq` och antalet matchande rader skrivs ut.
 
 ### krav 4
 
+Jag utgick redan från början från att ta datum och tid, så det var inget jag lade på i efterhand. Om log-filen hade varit för ett helt år (med ca tre miljoner rader), hade månad och dag blivit mer relevanta i filtreringen...
+
+Python-funktionen som styr time-filtret var först en lite längre funktion på 10 rader, som splittade upp tids-strängarna och jämförde timme, minut och sekund var för sig. Men när jag skulle skriva redovisningstexten, och förklara vad den gjorde insåg jag att jag kunde förenkla den till en rad som kollar om strängarna börjar lika.
+
+En annan sak jag förbättrande var att göra om månad och url till *lower case* redan i `2json.awk`. Då behövde python inte göra det jobbet för varje entry, för att kunna göra en *case insensitive* jämförelse.
+
+
 ### krav 5
+
+Jag valde att bygga webbklienten med Node.js och express. Jag skapade ett skelett med express application generator, och valde att testa `pug`, en template engine jag inte använt tidigare. Jag lade till `axios` för att hantera requests mot log-servern. Jag fick modifiera en rad i entrypoint-filen `server.listen(port, '0.0.0.0');` för att tillåta åtkomst via `localhost`.
+
+`models/log_model.js` innehåller klassen `LogModel` som hanterar all kommunikation med log-servern. Filterna kontrolleras även här mot log-serverns `/filters`, men här rensas bara ogiltiga filter bort utan att generera ett fel, och sedan byggs en query-sträng av de giltiga filterna. `axios` parsar automatiskt json-responsen till en array, och det är bara att returnera `response.data`. I *controllern* `index.js` skalas arrayen med entries ner till max 100 
+
 
 ### projektet
 
