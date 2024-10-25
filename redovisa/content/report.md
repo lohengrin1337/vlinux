@@ -123,11 +123,26 @@ En annan sak jag förbättrande var att göra om månad och url till *lower case
 
 ### krav 5
 
-Jag valde att bygga webbklienten med Node.js och express. Jag skapade ett skelett med express application generator, och valde att testa `pug`, en template engine jag inte använt tidigare. Jag lade till `axios` för att hantera requests mot log-servern. Jag fick modifiera en rad i entrypoint-filen `server.listen(port, '0.0.0.0');` för att tillåta åtkomst via `localhost`.
+Jag valde att bygga webbklienten med Node.js och express. Jag skapade ett skelett med *express application generator*, och valde att testa `pug`, en template engine jag inte använt tidigare. Jag lade till `axios` för att hantera requests mot log-servern. Jag fick modifiera en rad i entrypoint-filen `server.listen(port, '0.0.0.0');` för att tillåta åtkomst via `localhost`.
 
-`models/log_model.js` innehåller klassen `LogModel` som hanterar all kommunikation med log-servern. Filterna kontrolleras även här mot log-serverns `/filters`, men här rensas bara ogiltiga filter bort utan att generera ett fel, och sedan byggs en query-sträng av de giltiga filterna. `axios` parsar automatiskt json-responsen till en array, och det är bara att returnera `response.data`. I *controllern* `index.js` skalas arrayen med entries ner till max 100 
+`models/log_model.js` innehåller klassen `LogModel` som hanterar all kommunikation med log-servern. Filterna kontrolleras även här mot log-serverns `/filters`, men här rensas bara ogiltiga filter bort utan att generera ett fel, och sedan byggs en query-sträng av de giltiga filterna. `axios` parsar automatiskt json-responsen till en array, och det är bara att returnera `response.data`.
+
+I *controllern* `index.js` skalas arrayen med entries ner till max 100 rader, och renderas sedan dynamiskt i en tabell med `pug`. Ett formulär med fem sökfält gör det enkelt att filtrera resultaten, och navigation i botten av sidan tillåter användaren att smidigt visa upp nästa, föregående, eller valfri sida.
+
+Jag försökte få till en stilren och enkel design med god användarvänlighet för både desktop och mobil , och känner mig nöjd med resultatet.
+
+Jag gillade att jobba med `pug`, syntaxen är enkel och lättläst. Style är gjord med ren css i moduler, men med facit i hand hade det varit smidigare att använda `sass`.
 
 
 ### projektet
 
+Jag tycker projektet var kul lättarbetat, och jag tycker inte att jag fastnade vid något särskilt moment. Istället var det mer att jag gick tillbaka och jobbade med att optimera fungerande kod. Det var ett bra och rimligt projekt för kursen.
+
+Jag känner att jag fått en bättre överblick av hur man kan sätta upp och anpassa sin utvecklingsmiljö, och hur det går att kombinera flera olika språk/ramverk på ett smidigt sätt. Dt blir ganska tydligt att bash inte är det bästa språket att bygga applikationer i - det var betydligt enklare att skriva koden till webbklienten än terminalklienten. Men det har ändå varit väldigt nyttigt att lära sig bash, awk, sed, grep med mera, och det kommer kännas bekvämt att använda dem som verktyg och till mindre program framöver. 
+
+
 ### kursen
+
+Kursen har varit rolig, spännande och bra. Jag känner mig mycket mer hemma i linuxmiljön nu, och har fått många nya verktyg att använda framöver. Arbetet med Docker har också breddat förståelsen av vad ett operativsystem innebär, och vilka beroenden som kan behövas för en specifik applikation. Jag har också fått en djupare förståelse för relationen mellan klient och server, och hur man kan jobba med att bygga ett isolerat REST API, som kan nyttjas av olika applikationer samtidigt.
+
+Jag är nöjd med undervisningen och kursmaterialet. Jag skulle rekommendera kursen, och ger den 9 av 10.
