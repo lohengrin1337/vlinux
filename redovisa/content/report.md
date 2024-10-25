@@ -118,16 +118,16 @@ Jag utgick redan från början från att ta med datum och tid, så det var inget
 
 Python-funktionen som styr time-filtret var först en lite längre funktion på 10 rader, som splittade upp tids-strängarna och jämförde timme, minut och sekund var för sig. Men när jag skulle skriva redovisningstexten, och förklara vad den gjorde insåg jag att jag kunde förenkla den till en rad som kollar om strängarna börjar lika.
 
-En annan sak jag förbättrande var att göra om månad och url till *lower case* redan i `2json.awk`. Då behövde python inte göra det jobbet för varje entry, för att kunna göra en *case insensitive* jämförelse.
+En annan sak jag förbättrande var att göra om månad och url till *lower case* redan i `2json.awk`. Då behövde python inte göra det jobbet för varje rad, för att kunna göra en *case insensitive* jämförelse.
 
 
 ### krav 5
 
-Jag valde att bygga webbklienten med Node.js och express. Jag skapade ett skelett med *express application generator*, och valde att testa `pug`, en template engine jag inte använt tidigare. Jag lade till `axios` för att hantera requests mot log-servern. Jag fick modifiera en rad i entrypoint-filen `server.listen(port, '0.0.0.0');` för att tillåta åtkomst via `localhost`.
+Webbklienten valde jag att bygga med Node.js och express. Jag skapade ett skelett med *express application generator*, och valde att testa `pug`, en template engine jag inte använt tidigare. Jag lade till `axios` för att hantera requests mot log-servern. I entrypoint-filen jag fick modifiera en rad, `server.listen(port, '0.0.0.0');`, för att tillåta åtkomst via `localhost`.
 
-`models/log_model.js` innehåller klassen `LogModel` som hanterar all kommunikation med log-servern. Filterna kontrolleras även här mot log-serverns `/filters`, men här rensas bara ogiltiga filter bort utan att generera ett fel, och sedan byggs en query-sträng av de giltiga filterna. `axios` parsar automatiskt json-responsen till en array, och det är bara att returnera `response.data`. Metoderna som kommunicerar med log-servern är asynkrona, vilket ger stöd för bättre prestanda.
+Klassen `LogModel` hanterar all kommunikation med log-servern. Filterna kontrolleras även här mot log-serverns `/filters`, men här rensas bara ogiltiga filter bort utan att generera ett fel, och sedan byggs en query-sträng av de giltiga filterna. `axios` parsar automatiskt json-responsen till en array, och det är bara att returnera `response.data`. Metoderna som kommunicerar med log-servern är asynkrona, vilket ger stöd för bättre prestanda.
 
-I *controllern* `index.js` skalas arrayen med entries ner till max 100 rader, och renderas sedan dynamiskt i en tabell med `pug`. Ett formulär med fem sökfält gör det enkelt att filtrera resultaten, och navigation i botten av sidan tillåter användaren att smidigt visa upp nästa, föregående, eller valfri sida.
+I *controllern* `routes/index.js` skalas arrayen med objekt ner till max 100 rader, vilka renderas dynamiskt i en tabell med `pug`. Ett formulär med fem sökfält gör det enkelt att filtrera resultaten, och navigation i botten av sidan tillåter användaren att smidigt visa upp nästa, föregående, eller valfri sida.
 
 Jag försökte få till en stilren och enkel design med god användarvänlighet för både desktop och mobil , och känner mig nöjd med resultatet.
 
@@ -136,7 +136,7 @@ Jag gillade att jobba med `pug`, syntaxen är enkel och lättläst. Style är gj
 
 ### projektet
 
-Jag tycker projektet var kul lättarbetat, och jag tycker inte att jag fastnade vid något särskilt moment. Istället var det mer att jag gick tillbaka och jobbade med att optimera fungerande kod. Det var ett bra och rimligt projekt för kursen.
+Jag tycker projektet var kul och lättarbetat, och jag tycker inte att jag fastnade vid något särskilt moment. Istället var det mer att jag gick tillbaka och jobbade med att optimera fungerande kod. Det var ett bra och rimligt projekt för kursen.
 
 Jag känner att jag fått en bättre överblick av hur man kan sätta upp och anpassa sin utvecklingsmiljö, och hur det går att kombinera flera olika språk/ramverk på ett smidigt sätt. Dt blir ganska tydligt att bash inte är det bästa språket att bygga applikationer i - det var betydligt enklare att skriva koden till webbklienten än terminalklienten. Men det har ändå varit väldigt nyttigt att lära sig bash, awk, sed, grep med mera, och det kommer kännas bekvämt att använda dem som verktyg och till mindre program framöver. 
 

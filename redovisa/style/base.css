@@ -127,23 +127,25 @@ h2 {
 
 h3 {
     font-size: var(--font-size-4-d);
-    margin-bottom: var(--baseline);
+    margin-bottom: var(--baseline-half);
 }
 
 h4 {
     font-size: 1rem;
 }
 
-* + h2 {
-    margin-top: var(--baseline-x4);
+p {
+    font-size: 1rem;
+    margin: 0;
+    margin-bottom: var(--baseline);
 }
 
-* + h3 {
-    margin-top: var(--baseline-x2);
+p:has(+ h3) {
+    margin-bottom: var(--baseline-x2);
 }
 
-h2 + h3 {
-    margin-top: 0;
+p:has(+ h2) {
+    margin-bottom: var(--baseline-x4);
 }
 
 a {
