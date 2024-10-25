@@ -2,14 +2,14 @@ table {
     width: 100%;
     box-shadow: var(--shadow-light-big);
     border-radius: 10px;
-    margin-bottom: var(--baseline);
     border-collapse: collapse;
     overflow: hidden;
     margin-bottom: var(--baseline-x2);
 }
 
 
-th, td {
+th,
+td {
     text-align: left;
     padding: var(--baseline-half);
 }
@@ -23,8 +23,8 @@ th {
     background-color: var(--bgcol-table-header);
 }
 
-tr:nth-child(even){
-    background-color: var(--bgcol-table-body-shade-1)
+tr:nth-child(even) {
+    background-color: var(--bgcol-table-body-shade-1);
 }
 
 tbody tr:hover {

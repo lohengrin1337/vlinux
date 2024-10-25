@@ -127,6 +127,8 @@ Webbklienten valde jag att bygga med Node.js och express. Jag skapade ett skelet
 
 Klassen `LogModel` hanterar all kommunikation med log-servern. Filterna kontrolleras även här mot log-serverns `/filters`, men här rensas bara ogiltiga filter bort utan att generera ett fel, och sedan byggs en query-sträng av de giltiga filterna. `axios` parsar automatiskt json-responsen till en array, och det är bara att returnera `response.data`. Metoderna som kommunicerar med log-servern är asynkrona, vilket ger stöd för bättre prestanda.
 
+Jag använde privata properties och metoder med syntaxen `#baseUrl;` och `async #buildQuery(filters)`. Eslint klagar på detta, men jag valde att behålla det eftersom versionen av node.js `node:23-slim` klarar det.
+
 I *controllern* `routes/index.js` skalas arrayen med objekt ner till max 100 rader, vilka renderas dynamiskt i en tabell med `pug`. Ett formulär med fem sökfält gör det enkelt att filtrera resultaten, och navigation i botten av sidan tillåter användaren att smidigt visa upp nästa, föregående, eller valfri sida.
 
 Jag försökte få till en stilren och enkel design med god användarvänlighet för både desktop och mobil , och känner mig nöjd med resultatet.

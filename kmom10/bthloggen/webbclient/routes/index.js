@@ -5,14 +5,14 @@ const logModel = require('../models/log_model.js');
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'bthlog' });
+router.get('/', function(req, res) {
+    res.render('index', { title: 'bthlog' });
 });
 
 
 
 /* GET log page. */
-router.get('/data', async function(req, res, next) {
+router.get('/data', async function(req, res) {
     const filters = {...req.query}; // shallow copy of the query params
     const log = new logModel();
     const entries = await log.getEntries(filters);

@@ -23,6 +23,5 @@
 .btn-big {
     padding: var(--baseline-half) var(--baseline);
     font-size: 120%;
-    /* font-weight: 300; */
     margin: auto;
 }

@@ -15,9 +15,11 @@
     --font-size-3-m: calc(1rem * 1.2 * 1.2);
     --font-size-4-m: calc(1rem * 1.2);
 
+    /* font families */
     --font-main: "Josefin Slab", monospace;
     --font-caps: "Josefin Sans", sans-serif;
 
+    /* colors */
     --white: #fff;
     --black: #000;
     --almost-white: #fafaff;
@@ -27,10 +29,9 @@
     --grey-semi-dark: #323237;
     --grey: #808080;
     --yellow: #c7942e;
-    --purple: #081E50;
+    --purple: #081e50;
     --purple-dark: #021030;
-    --purple-light: #10285F;
-
+    --purple-light: #10285f;
     --col-font: var(--almost-white);
     --bgcol: var(--almost-black);
     --col-accent: var(--yellow);
@@ -45,14 +46,12 @@
     /* form */
     --border-input: 1px solid var(--yellow);
     --bgcol-input: var(--almost-transparent);
-    /* --border-button: 1px solid var(--yellow); */
-    --border-button: 1px solid var(--purple-dark); 
+    --border-button: 1px solid var(--purple-dark);
     --bgcol-button: var(--purple);
     --bgcol-button-hover: var(--purple-dark);
-    /* --bgcol-button: var(--almost-transparent); */
     --col-button: var(--white);
 
     /* shadows */
-    --shadow-light-small: 0px 0px 5px var(--grey-semi-dark);
-    --shadow-light-big: 0px 0px 10px var(--grey-semi-dark);
+    --shadow-light-small: 0 0 5px var(--grey-semi-dark);
+    --shadow-light-big: 0 0 10px var(--grey-semi-dark);
 }
