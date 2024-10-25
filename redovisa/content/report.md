@@ -77,7 +77,7 @@ För att kunna återanvända koden på ett bra sätt i spel-loopen i mazerunner,
 Det har varit kul att lära sig jobba med `sed` och `awk`. `sed` känns ett steg mer kraftfullt än `grep`, med stöd för *substitution* och möjlighet att editera en fil direkt. `awk` känns i sin tur några steg mer avancerat än `sed`, med stöd för en mängd olika saker, som ett eget litet programmeringsspråk. Det känns skönt att lära sig olika verkyg som gör linux-miljön enklare.
 
 
-<h2 id="kmom10">bthloggen (kmom10)</h2>
+<h2 id="kmom10">bthloggen</h2>
 
 ### krav 1
 
@@ -93,7 +93,7 @@ Jag letade efter ett ramverk som skulle vara lämpligt för ett REST API, och d�
 
 Servern lyssnar efter requests på tre routes, vilka svarar med response med json-body. `/` ger en dokumentation över olika routes, `/filters` ger en lista med de olika filter som stöds, och `/data` ger hela eller matchande delar av log-filen.
 
-Jag valde att bygga stöd för *query strings* hos `/data` routen, för att enkelt kunna stödja filtrering med valfritt antal filter. FastAPI hade en smidig lösning för att fånga upp parameterna och dess värden, genom att ange parameterna som argument till funktionen `get_data()`
+Jag valde att bygga stöd för *query strings* hos `/data` routen, för att enkelt kunna stödja filtrering med valfritt antal filter. FastAPI hade en smidig lösning för att fånga upp parametrarna och dess värden, genom att ange parametrarna som argument till funktionen `get_data()`
 
 Klassen `LogHandler` får ansvaret att läsa in log-filen, och filterar den med de filter som skickas med (i den ordning som filterna är angivna), och returnerar en lista med *dictionaries*. FastAPI hanterar datastrukturen, och levererar automatiskt ett json-response. Metoderna är asynkrona, vilket förbättrar prestandan vid flera parallella requests.
 
@@ -108,13 +108,13 @@ Med kommandot `use` sätts den globala variablen `CUSTOM_HOST` genom att `CUSTOM
 
 `url` visar upp de publicerade adressera till både log-servern och webbklienten.
 
-`view [<filter> <value> ...]` anropar `app_view` optionella filter som argument. Filterna verifieras mot log-serverns `/filters`, och en *query string* samt läsbar sträng byggs upp. Därefter skickas en förfrågan till logserverns `/data<query>`, responsen verifieras, och sparas till en temporär fil (`sed` för att skala bort header), som sedan parsas till csv med `jq`, och till tabellformat med `awk`. Innehållet i den temporära filen uppdatteras för varje steg. Till slut skrivs tabellen ut inramad och med rubrik. När programmet avslutas rensas den temporära filen bort med `trap 'rm -f "$RESPONSE_TEMP"' EXIT`.
+`view [<filter> <value> ...]` anropar `app_view` med optionella filter som argument. Filterna verifieras mot log-serverns `/filters`, och en *query string* samt läsbar sträng byggs upp. Därefter skickas en förfrågan till logserverns `/data<query>`, responsen verifieras, och sparas till en temporär fil (`sed` för att skala bort header), som sedan parsas till csv med `jq`, och till tabellformat med `awk`. Innehållet i den temporära filen uppdatteras för varje steg. Till slut skrivs tabellen ut tillsammans med information om angivna filter. Ett ogiltigt filter genererar ett felmeddelande. När programmet avslutas rensas den temporära filen bort med `trap 'rm -f "$RESPONSE_TEMP"' EXIT`.
 
 `--count` kan användas som option till `view`, och då anropas istället `app_count_view`, där json-objekten räknas med `jq` och antalet matchande rader skrivs ut.
 
 ### krav 4
 
-Jag utgick redan från början från att ta datum och tid, så det var inget jag lade på i efterhand. Om log-filen hade varit för ett helt år (med ca tre miljoner rader), hade månad och dag blivit mer relevanta i filtreringen...
+Jag utgick redan från början från att ta med datum och tid, så det var inget jag lade till i efterhand. Om log-filen hade varit för ett helt år (med ca tre miljoner rader), hade månad och dag blivit mer relevanta i filtreringen...
 
 Python-funktionen som styr time-filtret var först en lite längre funktion på 10 rader, som splittade upp tids-strängarna och jämförde timme, minut och sekund var för sig. Men när jag skulle skriva redovisningstexten, och förklara vad den gjorde insåg jag att jag kunde förenkla den till en rad som kollar om strängarna börjar lika.
 
@@ -125,7 +125,7 @@ En annan sak jag förbättrande var att göra om månad och url till *lower case
 
 Jag valde att bygga webbklienten med Node.js och express. Jag skapade ett skelett med *express application generator*, och valde att testa `pug`, en template engine jag inte använt tidigare. Jag lade till `axios` för att hantera requests mot log-servern. Jag fick modifiera en rad i entrypoint-filen `server.listen(port, '0.0.0.0');` för att tillåta åtkomst via `localhost`.
 
-`models/log_model.js` innehåller klassen `LogModel` som hanterar all kommunikation med log-servern. Filterna kontrolleras även här mot log-serverns `/filters`, men här rensas bara ogiltiga filter bort utan att generera ett fel, och sedan byggs en query-sträng av de giltiga filterna. `axios` parsar automatiskt json-responsen till en array, och det är bara att returnera `response.data`.
+`models/log_model.js` innehåller klassen `LogModel` som hanterar all kommunikation med log-servern. Filterna kontrolleras även här mot log-serverns `/filters`, men här rensas bara ogiltiga filter bort utan att generera ett fel, och sedan byggs en query-sträng av de giltiga filterna. `axios` parsar automatiskt json-responsen till en array, och det är bara att returnera `response.data`. Metoderna som kommunicerar med log-servern är asynkrona, vilket ger stöd för bättre prestanda.
 
 I *controllern* `index.js` skalas arrayen med entries ner till max 100 rader, och renderas sedan dynamiskt i en tabell med `pug`. Ett formulär med fem sökfält gör det enkelt att filtrera resultaten, och navigation i botten av sidan tillåter användaren att smidigt visa upp nästa, föregående, eller valfri sida.
 
