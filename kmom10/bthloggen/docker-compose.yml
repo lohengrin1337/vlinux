@@ -23,7 +23,7 @@ services:
       - server:log-server
 
   webbclient:
-    image: lohengrin1337/bthloggen-server:1.0
+    image: lohengrin1337/bthloggen-webbclient:1.0
     container_name: log-webclient
     networks:
       - bthloggen
